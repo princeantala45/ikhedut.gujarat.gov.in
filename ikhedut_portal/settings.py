@@ -19,9 +19,10 @@ SECRET_KEY = os.environ.get(
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "ikhedut-portal-latest.onrender.com",
-    "localhost",
+    "ikhedut-portal.onrender.com",
     "127.0.0.1",
+    "localhost",
+    "ikhedut-portal-latest.onrender.com"
 ]
 
 INSTALLED_APPS = [
