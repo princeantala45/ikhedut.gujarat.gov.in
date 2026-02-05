@@ -25,8 +25,6 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework.decorators import authentication_classes
 from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth import login
-
-
 from .models import *
 from .serializer import *
 
