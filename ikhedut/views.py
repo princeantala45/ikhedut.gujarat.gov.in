@@ -129,7 +129,7 @@ def sellcrops_page(request):
         "quick_links": QuickLink.objects.all(),
     }
     return render(request, "sellcrops.html",context)
-@permission_classes([IsAuthenticated])
+
 class ContactView(viewsets.ModelViewSet):
     queryset = Contact.objects.all()
     serializer_class = Conactserializers

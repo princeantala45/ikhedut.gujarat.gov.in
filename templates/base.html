@@ -221,18 +221,6 @@
 </head>
 
 <body>
-    {% for message in messages %}
-    <div class="alert-message fixed top-5 right-5 z-50 w-80 rounded-md border p-4 shadow-lg overflow-hidden
-  {% if message.tags == 'error' %}
-    bg-red-100 text-red-700 border-red-300
-  {% else %}
-    bg-green-100 text-green-700 border-green-300
-  {% endif %}
-">
-        <p class="text-sm font-medium">{{ message }}</p>
-        <div class="absolute bottom-0 left-0 h-1 w-full bg-current timer-line"></div>
-    </div>
-    {% endfor %}
 
     <!-- Page Loader -->
     <div id="page-loader">
@@ -283,12 +271,8 @@
             <!-- Buttons -->
             <div class="flex flex-col md:flex-row gap-2 justify-center items-center md:col-span-3 lg:col-span-1">
 
-{% if user.is_authenticated %}
-<form
-    method="post"
-    action="/logout/"
-    class="w-fit"
-    onsubmit="
+                {% if user.is_authenticated %}
+                <form method="post" action="/logout/" class="w-fit" onsubmit="
         event.preventDefault();
         Swal.fire({
             title: 'Are you sure?',
@@ -302,23 +286,22 @@
                 this.submit();
             }
         });
-    "
->
-    {% csrf_token %}
-    <button type="submit" class="cssbuttons-io-button">
-        Logout
-        <div class="icon">
-            <svg height="24" width="24" viewBox="0 0 24 24">
-                <path d="M0 0h24v24H0z" fill="none"></path>
-                <path
-                    d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
-                    fill="currentColor">
-                </path>
-            </svg>
-        </div>
-    </button>
-</form>
-{% else %}
+    ">
+                    {% csrf_token %}
+                    <button type="submit" class="cssbuttons-io-button">
+                        Logout
+                        <div class="icon">
+                            <svg height="24" width="24" viewBox="0 0 24 24">
+                                <path d="M0 0h24v24H0z" fill="none"></path>
+                                <path
+                                    d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
+                                    fill="currentColor">
+                                </path>
+                            </svg>
+                        </div>
+                    </button>
+                </form>
+                {% else %}
 
                 <!-- Login button -->
                 <a href="/login" class="w-fit">
@@ -444,10 +427,7 @@
                                 Cart
                             </a>
 
-<form
-    method="post"
-    action="/logout/"
-    onsubmit="
+                            <form method="post" action="/logout/" onsubmit="
         event.preventDefault();
         Swal.fire({
             title: 'Are you sure?',
@@ -461,17 +441,13 @@
                 this.submit();
             }
         });
-    "
->
-    {% csrf_token %}
-    <button
-        type="submit"
-        class="block w-full px-4 py-2 text-sm text-white text-left
-               focus:bg-gray-100 focus:outline-hidden dark:text-gray-300 dark:focus:bg-white/5"
-    >
-        Sign out
-    </button>
-</form>
+    ">
+                                {% csrf_token %}
+                                <button type="submit" class="block w-full px-4 py-2 text-sm text-white text-left
+               focus:bg-gray-100 focus:outline-hidden dark:text-gray-300 dark:focus:bg-white/5">
+                                    Sign out
+                                </button>
+                            </form>
 
 
 

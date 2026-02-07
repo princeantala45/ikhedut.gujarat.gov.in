@@ -97,7 +97,13 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGES = [
+    ('en', 'English'),
+]
+
+LANGUAGE_CODE = 'en'
+USE_I18N = True
+
 
 TIME_ZONE = 'Asia/Kolkata'
 
@@ -176,6 +182,7 @@ CSRF_TRUSTED_ORIGINS = [
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/userprofile/"
 LOGOUT_REDIRECT_URL = "/login/"
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 SIMPLE_JWT = {

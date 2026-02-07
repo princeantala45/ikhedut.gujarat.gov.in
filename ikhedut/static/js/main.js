@@ -1,31 +1,57 @@
+// ==========================slider==========================
+const sliderBox = document.getElementById("sliderBox");
 
-    window.addEventListener("load", function () {
-        const loader = document.getElementById("page-loader");
-        if (loader) {
-            loader.style.opacity = "0";
-            loader.style.pointerEvents = "none";
-            setTimeout(() => loader.remove(), 1800);
-        }
-    });
+function slideRight() {
+  const slideWidth = sliderBox.clientWidth;
 
-// ==========================nav=bar-==========================
-  function setActiveNav() {
-    const currentPath = window.location.pathname.replace(/\/$/, "") || "/";
-
-    document.querySelectorAll(".nav-link").forEach(link => {
-      const linkPath = link.getAttribute("href").replace(/\/$/, "") || "/";
-      link.classList.toggle("active", linkPath === currentPath);
-    });
+  if (sliderBox.scrollLeft + slideWidth >= sliderBox.scrollWidth - 5) {
+    sliderBox.scrollTo({ left: 0, behavior: "smooth" });
+  } else {
+    sliderBox.scrollBy({ left: slideWidth, behavior: "smooth" });
   }
+}
 
-  document.addEventListener("DOMContentLoaded", setActiveNav);
+function slideLeft() {
+  const slideWidth = sliderBox.clientWidth;
 
-  // Re-run when mobile menu is toggled
-  document.addEventListener("click", e => {
-    if (e.target.closest('[commandfor="mobile-menu"]')) {
-      setTimeout(setActiveNav, 50);
-    }
+  if (sliderBox.scrollLeft <= 0) {
+    sliderBox.scrollTo({
+      left: sliderBox.scrollWidth,
+      behavior: "smooth",
+    });
+  } else {
+    sliderBox.scrollBy({ left: -slideWidth, behavior: "smooth" });
+  }
+}
+
+// ===================== PAGE LOADER =====================
+window.addEventListener("load", function () {
+  const loader = document.getElementById("page-loader");
+  if (loader) {
+    loader.style.opacity = "0";
+    loader.style.pointerEvents = "none";
+    setTimeout(() => loader.remove(), 1800);
+  }
+});
+
+// ==========================nav=bar==========================
+function setActiveNav() {
+  const currentPath = window.location.pathname.replace(/\/$/, "") || "/";
+
+  document.querySelectorAll(".nav-link").forEach(link => {
+    const linkPath = link.getAttribute("href").replace(/\/$/, "") || "/";
+    link.classList.toggle("active", linkPath === currentPath);
   });
+}
+
+document.addEventListener("DOMContentLoaded", setActiveNav);
+
+document.addEventListener("click", e => {
+  if (e.target.closest('[commandfor="mobile-menu"]')) {
+    setTimeout(setActiveNav, 50);
+  }
+});
+
 document.addEventListener("DOMContentLoaded", () => {
   // ================== UP ARROW ==================
   const upArrow = document.querySelector(".up-errow");
@@ -93,7 +119,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // mission-vision 
-
 document.addEventListener("DOMContentLoaded", () => {
   const sections = [
     "mission-text",
@@ -161,7 +186,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-
 document.addEventListener("DOMContentLoaded", () => {
   const items = document.querySelectorAll('#information-text');
 
@@ -175,7 +199,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
-
 
 // india-map-
 document.addEventListener("DOMContentLoaded", () => {
@@ -195,8 +218,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
-
-
 
 // -------------customer-review----------
 document.addEventListener("DOMContentLoaded", () => {
@@ -218,42 +239,36 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-
-
-
-// =====================loder-all-page-=========================
+// =====================loder-all-page==========================
 window.addEventListener("load", function () {
-    const loader = document.getElementById("page-loader");
-    if (loader) {
-        loader.style.display = "none";
-    }
+  const loader = document.getElementById("page-loader");
+  if (loader) {
+    loader.style.display = "none";
+  }
 });
 
-
-// ================= PAGE LOADER =================
 // ================= PAGE LOADER =================
 document.addEventListener("DOMContentLoaded", () => {
-    const loader = document.getElementById("page-loader");
-    if (!loader) return;
+  const loader = document.getElementById("page-loader");
+  if (!loader) return;
 
-    // Show loader on link click
-    document.querySelectorAll("a[href]").forEach(link => {
-        link.addEventListener("click", () => {
-            loader.classList.remove("hide");
-        });
+  document.querySelectorAll("a[href]").forEach(link => {
+    link.addEventListener("click", () => {
+      loader.classList.remove("hide");
     });
+  });
 
-    // Show loader on form submit
-    document.querySelectorAll("form").forEach(form => {
-        form.addEventListener("submit", () => {
-            loader.classList.remove("hide");
-        });
+  document.querySelectorAll("form").forEach(form => {
+    form.addEventListener("submit", () => {
+      loader.classList.remove("hide");
     });
+  });
 });
-// =========================password-validation============================
 
+// =========================password-validation============================
 document.addEventListener("DOMContentLoaded", function () {
   const passwordInput = document.getElementById("password");
+  if (!passwordInput) return;
 
   const lengthRule    = document.getElementById("length");
   const uppercaseRule = document.getElementById("uppercase");
@@ -264,84 +279,52 @@ document.addEventListener("DOMContentLoaded", function () {
   passwordInput.addEventListener("input", function () {
     const value = passwordInput.value;
 
-    lengthRule.className    = value.length >= 8        ? "text-green-600" : "text-red-500";
-    uppercaseRule.className = /[A-Z]/.test(value)      ? "text-green-600" : "text-red-500";
-    lowercaseRule.className = /[a-z]/.test(value)      ? "text-green-600" : "text-red-500";
-    numberRule.className    = /\d/.test(value)         ? "text-green-600" : "text-red-500";
+    lengthRule.className    = value.length >= 8 ? "text-green-600" : "text-red-500";
+    uppercaseRule.className = /[A-Z]/.test(value) ? "text-green-600" : "text-red-500";
+    lowercaseRule.className = /[a-z]/.test(value) ? "text-green-600" : "text-red-500";
+    numberRule.className    = /\d/.test(value) ? "text-green-600" : "text-red-500";
     specialRule.className   = /[^A-Za-z0-9]/.test(value) ? "text-green-600" : "text-red-500";
   });
 });
 
-
-
-
-
-// ==================================order-cancellation-========================================
+// ==================================order-cancellation========================================
 document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".countdown").forEach(el => {
-        const created = parseInt(el.getAttribute("data-created")) * 1000;
-        const orderId = el.getAttribute("data-order");
-        const timer = document.getElementById("timer-" + orderId);
+  document.querySelectorAll(".countdown").forEach(el => {
+    const created = parseInt(el.getAttribute("data-created")) * 1000;
+    const orderId = el.getAttribute("data-order");
+    const timer = document.getElementById("timer-" + orderId);
 
-        if (!timer || isNaN(created)) return;
+    if (!timer || isNaN(created)) return;
 
-        function update() {
-            const end = created + (24 * 60 * 60 * 1000);
-            const diff = end - Date.now();
+    function update() {
+      const end = created + (24 * 60 * 60 * 1000);
+      const diff = end - Date.now();
 
-            if (diff <= 0) {
-                timer.textContent = "Expired";
-                el.classList.add("text-gray-400");
-                return;
-            }
+      if (diff <= 0) {
+        timer.textContent = "Expired";
+        el.classList.add("text-gray-400");
+        return;
+      }
 
-            const h = Math.floor(diff / (1000 * 60 * 60));
-            const m = Math.floor((diff / (1000 * 60)) % 60);
-            const s = Math.floor((diff / 1000) % 60);
+      const h = Math.floor(diff / (1000 * 60 * 60));
+      const m = Math.floor((diff / (1000 * 60)) % 60);
+      const s = Math.floor((diff / 1000) % 60);
 
-            timer.textContent = `${h}h ${m}m ${s}s`;
-        }
+      timer.textContent = `${h}h ${m}m ${s}s`;
+    }
 
-        update();
-        setInterval(update, 1000);
-    });
+    update();
+    setInterval(update, 1000);
+  });
 });
 
 function confirmCancel(orderId) {
-    if (confirm("Are you sure you want to cancel this order?")) {
-        window.location.href =
-            `/order/request-cancel/${orderId}/`;
-    }
+  if (confirm("Are you sure you want to cancel this order?")) {
+    window.location.href = `/order/request-cancel/${orderId}/`;
+  }
 }
-
-
-
-// =============================live=clock========================
-
-function updateTime() {
-  const now = new Date();
-
-  let hours = now.getHours();
-  let minutes = now.getMinutes();
-  let seconds = now.getSeconds();
-
-  const ampm = hours >= 12 ? "PM" : "AM";
-
-  hours = hours % 12 || 12;
-  minutes = String(minutes).padStart(2, "0");
-  seconds = String(seconds).padStart(2, "0");
-
-  document.getElementById("clock").textContent =
-    `${hours}:${minutes}:${seconds} ${ampm}`;
-}
-
-updateTime();
-setInterval(updateTime, 1000);
-
-
 
 // =========================message=======================
-
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".alert-message").forEach((alert) => {
     setTimeout(() => {
@@ -350,4 +333,3 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 5000);
   });
 });
-

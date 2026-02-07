@@ -5,6 +5,75 @@
 {% endblock title %}
 
 {% block content %}
+<style>
+    .track-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #9ca3af; /* gray */
+}
+
+.track-step .dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #d1d5db;
+  margin-bottom: 4px;
+}
+
+.track-step.active {
+  color: #16a34a;
+}
+
+.track-step.active .dot {
+  background: #16a34a;
+}
+
+.line {
+  flex: 1;
+  height: 2px;
+  background: #d1d5db;
+  margin: 0 6px;
+}
+
+.line.active {
+  background: #16a34a;
+}
+/* ================= ORDER TRACKING RESPONSIVE ================= */
+
+/* Mobile adjustments */
+@media (max-width: 640px) {
+
+  .track-step {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .track-step p {
+    font-size: 14px;
+  }
+
+  .track-step .dot {
+    margin-bottom: 0;
+  }
+
+  /* Container becomes vertical */
+  .track-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  /* Horizontal lines turn vertical */
+  .line {
+    width: 2px;
+    height: 22px;
+    margin: 0 0 0 6px;
+  }
+}
+</style>
 
 <div class="max-w-6xl mx-auto px-4 py-10 space-y-10">
 
@@ -210,7 +279,9 @@
         <div class="space-y-8">
 
             {% for order in orders %}
-            <div class="border rounded-2xl p-6 hover:shadow-lg transition space-y-5">
+            <div class="border rounded-2xl p-6 hover:shadow-lg transition space-y-5"
+     data-created="{{ order.created_at|date:'U' }}">
+
 
                 <!-- Order Header -->
                 <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
@@ -284,21 +355,54 @@
                 </div>
 
                 <!-- Cancel Section -->
-                {% if order.can_cancel %}
-                <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+               {% if order.can_cancel %}
+<div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+    <p class="countdown ..." data-created="{{ order.created_at|date:'U' }}"
+       data-order="{{ order.id }}">
+        Cancel available for:
+        <span id="timer-{{ order.id }}"></span>
+    </p>
 
-                    <p class="countdown text-orange-600 font-medium" data-created="{{ order.created_at|date:'U' }}"
-                        data-order="{{ order.id }}">
-                        Cancel available for:
-                        <span id="timer-{{ order.id }}"></span>
-                    </p>
+    <button onclick="confirmCancelOrder('{{ order.id }}')"
+        class="px-5 py-2 rounded-lg bg-red-500 text-white font-medium hover:bg-red-600 transition">
+        Cancel Order
+    </button>
+</div>
+{% endif %}
 
-                    <button onclick="confirmCancel('{{ order.id }}')" class="px-5 py-2 rounded-lg bg-red-500 text-white
-                               font-medium hover:bg-red-600 transition">
-                        Cancel Order
-                    </button>
-                </div>
-                {% endif %}
+<!-- ✅ ORDER TRACKING (ALWAYS VISIBLE) -->
+<div class="mt-4">
+  <div class="track-container flex items-center justify-between text-xs sm:text-sm">
+
+
+    <div class="track-step">
+      <div class="dot"></div>
+      <p>Placed</p>
+    </div>
+
+    <div class="line"></div>
+
+    <div class="track-step">
+      <div class="dot"></div>
+      <p>Processing</p>
+    </div>
+
+    <div class="line"></div>
+
+    <div class="track-step">
+      <div class="dot"></div>
+      <p>Shipped</p>
+    </div>
+
+    <div class="line"></div>
+
+    <div class="track-step">
+      <div class="dot"></div>
+      <p>Delivered</p>
+    </div>
+
+  </div>
+</div>
 
             </div>
             {% endfor %}
@@ -351,19 +455,30 @@
                         Pending
                         {% endif %}
                     </span>
-                    <form method="POST" action="{% url 'delete_advertisement' ad.id %}"
-                        onsubmit="return confirm('Delete this advertisement?');">
-                        {% csrf_token %}
-                        <button type="submit" class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition"
-                            title="Delete">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7
-                             m5 4v6m4-6v6
-                             m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                        </button>
-                    </form>
+                    <form method="POST"
+      action="{% url 'delete_advertisement' ad.id %}"
+      onsubmit="event.preventDefault(); confirmDelete(this);">
+
+    {% csrf_token %}
+
+    <button type="submit"
+            class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition"
+            title="Delete">
+        <svg xmlns="http://www.w3.org/2000/svg"
+             class="h-5 w-5"
+             fill="none"
+             viewBox="0 0 24 24"
+             stroke="currentColor">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7
+                     m5 4v6m4-6v6
+                     m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+    </button>
+</form>
+
                 </div>
 
             </div>
@@ -377,48 +492,71 @@
     </div>
 
 </div>
+
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const TEN_DAYS = 10 * 24 * 60 * 60 * 1000; // milliseconds
+document.addEventListener("DOMContentLoaded", function () {
 
-        document.querySelectorAll("[data-created]").forEach(el => {
-            const createdAtUnix = parseInt(el.dataset.created) * 1000;
-            const orderId = el.dataset.order;
+  const DAY = 24 * 60 * 60 * 1000;
+  const SEVEN_DAYS = 7 * DAY;
+  const now = Date.now();
 
-            const now = Date.now();
+  document.querySelectorAll(".border[data-created]").forEach(card => {
 
-            if (now - createdAtUnix >= TEN_DAYS) {
-                // Update countdown text
-                el.innerHTML = `
-                <span class="text-green-600 font-semibold">
-                    Order Delivered
-                </span>
-            `;
+    const createdAt = parseInt(card.dataset.created) * 1000;
+    const elapsed = now - createdAt;
 
-                // Update status badge text visually
-                const orderCard = el.closest(".border");
-                if (orderCard) {
-                    const badge = orderCard.querySelector("span.inline-block");
-                    if (badge) {
-                        badge.textContent = "Completed";
-                        badge.className =
-                            "inline-block px-4 py-1.5 rounded-full text-sm font-medium bg-green-100 text-green-700";
-                    }
-                }
-            } else {
-                // Show remaining time
-                const remaining = TEN_DAYS - (now - createdAtUnix);
-                const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
-                const hours = Math.floor(
-                    (remaining / (1000 * 60 * 60)) % 24
-                );
+    const badge = card.querySelector("span.inline-block");
+    const cancelBtn = card.querySelector("button[onclick^='confirmCancelOrder']");
+    const timer = card.querySelector("[id^='timer-']");
 
-                el.querySelector(`#timer-${orderId}`).textContent =
-                    `${days}d ${hours}h`;
-            }
-        });
-    });
+    const steps = card.querySelectorAll(".track-step");
+    const lines = card.querySelectorAll(".line");
+
+    function activate(stepIndex) {
+      steps.forEach((s, i) => {
+        if (i <= stepIndex) s.classList.add("active");
+      });
+      lines.forEach((l, i) => {
+        if (i < stepIndex) l.classList.add("active");
+      });
+    }
+
+    // ✅ AFTER 7 DAYS → DELIVERED
+    if (elapsed >= SEVEN_DAYS) {
+
+      if (badge) {
+        badge.textContent = "Completed";
+        badge.className =
+          "inline-block px-4 py-1.5 rounded-full text-sm font-medium bg-green-100 text-green-700";
+      }
+
+      if (cancelBtn) cancelBtn.style.display = "none";
+
+      activate(3); // Delivered
+    }
+
+    // ⏳ BEFORE 7 DAYS
+    else {
+      if (timer) {
+        const remaining = SEVEN_DAYS - elapsed;
+        const days = Math.floor(remaining / DAY);
+        const hours = Math.floor((remaining % DAY) / (60 * 60 * 1000));
+        timer.textContent = `${days}d ${hours}h`;
+      }
+
+      if (elapsed < 1 * DAY) activate(0);        // Placed
+      else if (elapsed < 3 * DAY) activate(1);   // Processing
+      else activate(2);                           // Shipped
+    }
+
+  });
+
+});
 </script>
+
+
+
+
 <script>
     function showSection(section, btn) {
         // Hide all sections
@@ -442,6 +580,63 @@
         btn.classList.add('bg-blue-50', 'text-blue-600');
         btn.classList.remove('text-gray-600');
     }
+
+function confirmDelete(form) {
+  Swal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Yes, delete it!",
+    cancelButtonText: "Cancel"
+  }).then((result) => {
+    if (result.isConfirmed) {
+
+      // ✅ SUCCESS MESSAGE
+      Swal.fire({
+        title: "Deleted!",
+        text: "Your item has been deleted successfully.",
+        icon: "success",
+        showConfirmButton: false,
+        timer: 1500
+      }).then(() => {
+        form.submit(); // submit after success message
+      });
+
+    }
+  });
+}
+
+
+function confirmCancelOrder(orderId) {
+  Swal.fire({
+    title: "Cancel this order?",
+    text: "This action cannot be undone!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Yes, cancel order",
+    cancelButtonText: "Keep Order"
+  }).then((result) => {
+    if (result.isConfirmed) {
+
+      // ✅ SUCCESS MESSAGE
+      Swal.fire({
+        title: "Cancelled!",
+        text: "Your order cancellation request sent successfully to admin.",
+        icon: "success",
+        showConfirmButton: false,
+        timer: 1500
+      }).then(() => {
+        window.location.href = `/order/request-cancel/${orderId}/`;
+      });
+
+    }
+  });
+}
 </script>
 
 

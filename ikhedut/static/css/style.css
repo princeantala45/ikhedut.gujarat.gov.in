@@ -29,6 +29,21 @@ html{
     /* background-color: #0b5e2a; */
     /* color: #fff; */
 }
+/* ---------------------------main slider --------------------------------\ */
+.auto-slider {
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+  height: 445px;
+}
+
+.auto-slide {
+  min-width: 100%;
+  height: 445px;
+  object-fit: cover;
+}
+
+
 /* =======================nav=bar====================== */
 .nav-link {
   position: relative;

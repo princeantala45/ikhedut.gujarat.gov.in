@@ -633,33 +633,5 @@
 
 {% comment %} ======================================================================================== {% endcomment %}
 
-<script>
-  const sliderBox = document.getElementById("sliderBox");
-
-  function slideRight() {
-    const slideWidth = sliderBox.clientWidth;
-
-    // If at the end, jump back to start
-    if (sliderBox.scrollLeft + slideWidth >= sliderBox.scrollWidth - 5) {
-      sliderBox.scrollTo({ left: 0, behavior: "smooth" });
-    } else {
-      sliderBox.scrollBy({ left: slideWidth, behavior: "smooth" });
-    }
-  }
-
-  function slideLeft() {
-    const slideWidth = sliderBox.clientWidth;
-
-    // If at the start, jump to last image
-    if (sliderBox.scrollLeft <= 0) {
-      sliderBox.scrollTo({
-        left: sliderBox.scrollWidth,
-        behavior: "smooth",
-      });
-    } else {
-      sliderBox.scrollBy({ left: -slideWidth, behavior: "smooth" });
-    }
-  }
-</script>
 
 {% endblock content %}
