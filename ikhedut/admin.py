@@ -19,11 +19,15 @@ admin.site.register(Signup)
 
 @admin.register(Navbar)
 class NavbarAdmin(SortableAdminMixin, admin.ModelAdmin):
-    list_display = ("page_name", "page_url", "order")
+    list_display = ("id","page_name", "page_url", "order")
+    list_editable = ("page_name","page_url",)
+    
 
 @admin.register(Slider_content)
 class Slider_content_admin(admin.ModelAdmin):
-    
+    list_display = ("id","first_line_text", "second_line_text",)
+    list_editable = ("first_line_text","second_line_text")
+
     def has_add_permission(self, request):
         return False
     
@@ -32,11 +36,11 @@ class CropSaleAdmin(admin.ModelAdmin):
     list_display = ("crop", "seller", "quantity", "price", "is_approved")
     list_filter = ("is_approved",)
     search_fields = ("crop", "seller__username")
+    list_editable = ("is_approved",)
+    
 
     actions = ["approve_selected", "reject_selected"]
 
-    # This ensures that even if you add a crop from the Admin panel, 
-    # the seller is set to YOU (the admin) automatically if left blank.
     def save_model(self, request, obj, form, change):
         if not obj.seller:
             obj.seller = request.user
@@ -56,6 +60,8 @@ class AdAdmin(admin.ModelAdmin):
     list_display = ("productname", "price", "city", "is_approved")
     list_filter = ("is_approved", "city")
     search_fields = ("productname", "city", "fullname")
+    list_editable = ("is_approved",)
+    
 
     actions = ["approve_ads", "reject_ads"]
 
@@ -148,4 +154,5 @@ class SupportedCompanyAdmin(SortableAdminMixin,admin.ModelAdmin):
 
 @admin.register(QuickLink)
 class QuicklinkAdmin(SortableAdminMixin, admin.ModelAdmin):
-    list_display = ("q_page_name", "q_page_url", "q_order")
+    list_display = ("id","q_page_name", "q_page_url", "q_order")
+    list_editable = ("q_page_name","q_page_url",)
