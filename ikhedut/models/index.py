@@ -1,3 +1,4 @@
+
 from django.db import models
 
 class Slider(models.Model):
@@ -46,3 +47,15 @@ class QuickLink(models.Model):
 
     def __str__(self):
         return self.q_page_name
+class Informations(models.Model):
+    info_image = models.ImageField(upload_to="Information_image/")
+    info_title = models.CharField(max_length=50)
+    info_text = models.CharField(max_length=250)  
+    info_button_url = models.CharField(max_length=50)
+    position = models.PositiveIntegerField(default=0, db_index=True)
+
+    class Meta:
+        ordering = ["position"]
+
+    def __str__(self):
+        return self.info_title

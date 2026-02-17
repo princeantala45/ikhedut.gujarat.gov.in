@@ -9,7 +9,7 @@
   </h1>
 </div>
 
-<main class="max-w-7xl mx-auto px-4 py-1">
+{% comment %} <main class="max-w-7xl mx-auto px-4 py-1">
   <div class="grid gap-6 sm:gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
     
     <div class="group relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col overflow-hidden">
@@ -140,6 +140,109 @@
       </div>
       <div class="p-3 bg-gray-50 text-center lg:hidden border-t border-gray-100">
         <p class="text-[10px] text-gray-400">← Swipe left to view all specs →</p>
+      </div>
+    </div>
+  </div>
+</main> {% endcomment %}
+
+
+<main class="max-w-7xl mx-auto px-4 py-1">
+  <div class="grid gap-6 sm:gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+    
+    {% for item in pumps %}
+    <div class="group relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col overflow-hidden">
+      
+      <div class="relative w-full bg-white">
+        <img src="{{ item.image.url }}" alt="{{ item.name }}"
+          class="w-full h-auto block object-contain transition-transform duration-500 group-hover:scale-110">
+        
+        <div class="absolute top-4 left-4 bg-{{ item.tagline_color }} text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+          {{ item.tagline }}
+        </div>
+      </div>
+
+      <div class="p-5 flex-1 flex flex-col space-y-3">
+        <h3 class="text-xl font-bold text-gray-800">{{ item.name }}</h3>
+
+        <div class="flex items-center space-x-2 {{ item.operation_color }} font-semibold text-sm">
+          <span>{{ item.operation_type }}</span>
+        </div>
+
+        <p class="text-gray-500 text-sm leading-relaxed">
+          {{ item.description }}
+        </p>
+
+        <div class="bg-gray-50 p-4 rounded-xl border-l-4 border-{{ item.tagline_color }} mt-auto">
+          <ul class="text-xs sm:text-sm text-gray-600 space-y-2">
+            <li class="flex items-start"><span class="mr-2">✔️</span> {{ item.feature_1 }}</li>
+            <li class="flex items-start"><span class="mr-2">✔️</span> {{ item.feature_2 }}</li>
+            <li class="flex items-start"><span class="mr-2">✔️</span> {{ item.feature_3 }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+  </div>
+
+  <!-- Technical Specifications -->
+  <div class="mt-16 mb-5 max-w-5xl mx-auto px-2">
+    <div class="mb-6">
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-800 border-l-4 border-green-600 pl-4">
+        Technical Specifications
+      </h2>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left min-w-[600px]">
+          <thead>
+            <tr class="bg-gray-50 border-b border-gray-200">
+              <th class="px-4 py-3 text-xs font-bold uppercase text-gray-500">Specs</th>
+
+              {% for item in pumps %}
+              <th class="px-4 py-3 text-sm font-bold text-gray-800">
+                {{ item.name }}
+              </th>
+              {% endfor %}
+            </tr>
+          </thead>
+
+          <tbody class="divide-y divide-gray-100">
+            <tr>
+              <td class="px-4 py-3 text-xs font-bold text-gray-600 bg-gray-50/50 uppercase">
+                Pressure
+              </td>
+              {% for item in pumps %}
+              <td class="px-4 py-3 text-sm text-gray-600">
+                {{ item.pressure }}
+              </td>
+              {% endfor %}
+            </tr>
+
+            <tr>
+              <td class="px-4 py-3 text-xs font-bold text-gray-600 bg-gray-50/50 uppercase">
+                Capacity
+              </td>
+              {% for item in pumps %}
+              <td class="px-4 py-3 text-sm text-gray-600">
+                {{ item.capacity }}
+              </td>
+              {% endfor %}
+            </tr>
+
+            <tr>
+              <td class="px-4 py-3 text-xs font-bold text-gray-600 bg-gray-50/50 uppercase">
+                Weight
+              </td>
+              {% for item in pumps %}
+              <td class="px-4 py-3 text-sm text-gray-600">
+                {{ item.weight }}
+              </td>
+              {% endfor %}
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

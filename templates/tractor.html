@@ -119,14 +119,14 @@
 </style>
 
 <main class="wrap">
-  <section class="grid">
+  {% comment %} <section class="grid">
 
     <article class="card" data-animate>
       <div class="media">
         <img src="{% static 'tractor-img/john-deer.webp'%}" alt="John Deere Tractor">
       </div>
       <div class="meta">
-        <h2>John Deere 6105E</h2>
+        <h2>John Deere 6105E</h2> 
         <div class="badge">55–75 HP</div>
       </div>
       <div class="desc">
@@ -247,7 +247,38 @@
       <p class="price">Price: ₹12 lakh – ₹14 lakh</p>
     </article>
 
-  </section>
+  </section> {% endcomment %}
+  <section class="grid">
+
+  {% for tractor in tractors %}
+  <article class="card" data-animate>
+    
+    <div class="media">
+      <img src="{{ tractor.image.url }}" alt="{{ tractor.tractor_name }}">
+    </div>
+
+    <div class="meta">
+      <h2>{{ tractor.tractor_name }}</h2>
+    </div>
+
+    <div class="desc">
+      <p>• Engine: {{ tractor.Engine }}</p>
+      <p>• Transmission: {{ tractor.Transmission }}</p>
+      <p>• Hydraulics: {{ tractor.Hydraulics }}</p>
+      <p>• Brakes: {{ tractor.Brake }}</p>
+      <p>• Steering: {{ tractor.Steering }}</p>
+      <p>• Fuel Tank: {{ tractor.FuelTank }}</p>
+      <p>• Tyres: {{ tractor.Tyres }}</p>
+      <p>• Build: {{ tractor.Build }}</p>
+    </div>
+
+    <p class="price">Price: {{ tractor.Price }}</p>
+
+  </article>
+  {% endfor %}
+
+</section>
+
 </main>
 
 <script>

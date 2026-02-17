@@ -13,7 +13,7 @@ Fertilizer
 </div>
 <script src="https://cdn.tailwindcss.com"></script>
 
-<main class="min-h-screen bg-gray-50 px-4 sm:px-6 lg:px-8">
+{% comment %} <main class="min-h-screen bg-gray-50 px-4 sm:px-6 lg:px-8">
   <div class="max-w-7xl mx-auto">
     <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
 
@@ -245,7 +245,59 @@ Fertilizer
 
     </section>
   </div>
+</main> {% endcomment %}
+
+<main class="min-h-screen bg-gray-50 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto">
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+
+      {% for item in fertilizers %}
+      <article
+        class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col overflow-hidden">
+        
+        <div class="relative h-56 bg-gray-50 flex items-center justify-center">
+          <img src="{{ item.image.url }}" alt="{{ item.name }}"
+            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+          <span
+            class="absolute top-4 right-4 bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+            {{ item.weight }}
+          </span>
+        </div>
+
+        <div class="p-6 flex-grow">
+          <h2 class="text-xl font-bold text-gray-900 mb-3">{{ item.name }}</h2>
+          <ul class="space-y-2 text-sm text-gray-600">
+            <li class="flex items-start">
+              <span class="text-emerald-500 mr-2">•</span>
+              <strong>Nutrient:</strong> {{ item.nutrient }}
+            </li>
+            <li class="flex items-start">
+              <span class="text-emerald-500 mr-2">•</span>
+              <strong>Best for:</strong> {{ item.best_for }}
+            </li>
+            <li class="flex items-start">
+              <span class="text-emerald-500 mr-2">•</span>
+              <strong>Benefits:</strong> {{ item.benefits }}
+            </li>
+          </ul>
+        </div>
+
+        <div class="p-6 pt-0 mt-auto">
+          <div class="flex items-center justify-center border-t border-gray-100 pt-4">
+            <span class="text-lg font-bold text-emerald-700">
+              ₹{{ item.price_range }}
+            </span>
+          </div>
+        </div>
+
+      </article>
+      {% endfor %}
+
+    </section>
+  </div>
 </main>
+
+
 <script>
   const cards = document.querySelectorAll('[data-animate]');
   const obs = new IntersectionObserver((entries) => {

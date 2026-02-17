@@ -3,14 +3,15 @@
 {% block title %}OX{% endblock title %}
 
 {% block content %}
-<main class="max-w-7xl mx-auto px-6 py-12 mt-14">
 
-<div class="grid gap-6 md:gap-10 lg:gap-14 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+{% comment %} <main class="max-w-7xl mx-auto px-6 py-12 mt-14">
+
+  <div class="grid gap-6 md:gap-10 lg:gap-14 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
 
   <div class="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col">
     <div class="h-56 sm:h-64 bg-cover bg-center"
      style="background-image: url('{% static 'oooxxx/gir-oximg.jpg' %}');">
-</div>
+  </div>
 
     <div class="p-4 sm:p-8 space-y-4 sm:space-y-6 flex-grow">
       <div>
@@ -34,7 +35,7 @@
   <div class="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col">
     <div class="h-56 sm:h-64 bg-cover bg-center"
      style="background-image: url('{% static 'oooxxx/rajasthan.jpg' %}');">
-</div>
+  </div>
 
     <div class="p-4 sm:p-8 space-y-4 sm:space-y-6 flex-grow">
       <div>
@@ -54,9 +55,9 @@
   </div>
 
   <div class="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col">
-<div class="h-56 sm:h-64 bg-cover bg-center"
+  <div class="h-56 sm:h-64 bg-cover bg-center"
      style="background-image: url('{% static 'oooxxx/tharparkar.jpg' %}');">
-</div>
+  </div>
 
     <div class="p-4 sm:p-8 space-y-4 sm:space-y-6 flex-grow">
       <div>
@@ -76,9 +77,9 @@
   </div>
 
   <div class="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col">
-<div class="h-56 sm:h-64 bg-cover bg-center"
+  <div class="h-56 sm:h-64 bg-cover bg-center"
      style="background-image: url('{% static 'oooxxx/punjab-hariyana.jpg' %}');">
-</div>
+  </div>
 
     <div class="p-4 sm:p-8 space-y-4 sm:space-y-6 flex-grow">
       <div>
@@ -98,9 +99,9 @@
   </div>
 
   <div class="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col">
-<div class="h-56 sm:h-64 bg-cover bg-center"
+  <div class="h-56 sm:h-64 bg-cover bg-center"
      style="background-image: url('{% static 'oooxxx/madhyapradesh.jpg' %}');">
-</div>
+  </div>
 
     <div class="p-4 sm:p-8 space-y-4 sm:space-y-6 flex-grow">
       <div>
@@ -120,9 +121,9 @@
   </div>
 
   <div class="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col">
-<div class="h-56 sm:h-64 bg-cover bg-center"
+  <div class="h-56 sm:h-64 bg-cover bg-center"
      style="background-image: url('{% static 'oooxxx/andhrapradesh.jpg' %}');">
-</div>
+  </div>
 
     <div class="p-4 sm:p-8 space-y-4 sm:space-y-6 flex-grow">
       <div>
@@ -141,6 +142,45 @@
     </div>
   </div>
 
+  </div>
+</main> {% endcomment %}
+<main class="max-w-7xl mx-auto px-6 py-12 mt-14">
+
+<div class="grid gap-6 md:gap-10 lg:gap-14 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+
+{% for ox in ox_list %}
+  <div class="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col">
+
+    <div class="h-56 sm:h-64 bg-cover bg-center"
+         style="background-image: url('{{ ox.image.url }}');">
+    </div>
+
+    <div class="p-4 sm:p-8 space-y-4 sm:space-y-6 flex-grow">
+      <div>
+        <h3 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
+          {{ ox.name }}
+        </h3>
+        <p class="text-base sm:text-lg text-red-600 font-semibold mt-1">
+          {{ ox.state }}
+        </p>
+      </div>
+
+      <p class="text-gray-700 text-sm sm:text-lg leading-relaxed">
+        {{ ox.description }}
+      </p>
+
+      <ul class="list-disc list-inside text-sm sm:text-lg text-gray-700 space-y-2">
+        <li>{{ ox.feauter_1 }}</li>
+        <li>{{ ox.feauter_2 }}</li>
+        <li>{{ ox.feauter_3 }}</li>
+        <li>{{ ox.feauter_4 }}</li>
+      </ul>
+
+    </div>
+  </div>
+{% endfor %}
+
 </div>
 </main>
+
 {% endblock content %}

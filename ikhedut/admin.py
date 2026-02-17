@@ -1,5 +1,6 @@
 from django.contrib import admin
 from adminsortable2.admin import SortableAdminMixin
+from django.utils.html import format_html
 from ikhedut.models import (
     Contact,
     Signup,
@@ -10,9 +11,18 @@ from ikhedut.models import (
     Slider,
     Slider2,
     Slider_content,
-    Navbar
+    Navbar,
+    Informations,
+    QuickLink,
+    SupportedCompany,
+    Tractor_Page,
+    Equipment,
+    Ox,
+    AgroChemical,
+    SprayPump
 )
-from ikhedut.models.index import QuickLink, SupportedCompany
+from ikhedut.models.fertilizer import Fertilizer
+
 
 admin.site.register(Contact)
 admin.site.register(Signup)
@@ -33,7 +43,7 @@ class Slider_content_admin(admin.ModelAdmin):
     
 @admin.register(CropSale)
 class CropSaleAdmin(admin.ModelAdmin):
-    list_display = ("crop", "seller", "quantity", "price", "is_approved")
+    list_display = ("crop", "seller", "quantity", "price", "is_approved","image_preview")
     list_filter = ("is_approved",)
     search_fields = ("crop", "seller__username")
     list_editable = ("is_approved",)
@@ -55,9 +65,18 @@ class CropSaleAdmin(admin.ModelAdmin):
                 obj.image.delete(save=False)
             obj.delete()
 
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html(
+                '<img src="{}" width="60" height="60" style="object-fit:cover;border-radius:8px;" />',
+                obj.image.url
+            )
+        return "-"
+    
+    image_preview.short_description = "Image"
 @admin.register(Ad)
 class AdAdmin(admin.ModelAdmin):
-    list_display = ("productname", "price", "city", "is_approved")
+    list_display = ("productname", "price", "city", "is_approved","image_preview")
     list_filter = ("is_approved", "city")
     search_fields = ("productname", "city", "fullname")
     list_editable = ("is_approved",)
@@ -77,6 +96,17 @@ class AdAdmin(admin.ModelAdmin):
             obj.delete()
 
     reject_ads.short_description = "Reject selected ads"
+    
+    
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html(
+                '<img src="{}" width="60" height="60" style="object-fit:cover;border-radius:8px;" />',
+                obj.image.url
+            )
+        return "-"
+    
+    image_preview.short_description = "Image"
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
@@ -138,21 +168,162 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(Slider)
 class SliderAdmin(admin.ModelAdmin):
-    list_display = ("id", "image", "is_active")
+    list_display = ("id", "image", "is_active","image_preview")
     list_editable = ("is_active",)
+    
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html(
+                '<img src="{}" width="60" height="60" style="object-fit:cover;border-radius:8px;" />',
+                obj.image.url
+            )
+        return "-"
+    
+    image_preview.short_description = "Image"
 
 @admin.register(Slider2)
 class Slider2Admin(admin.ModelAdmin):
-    list_display = ("image", "is_active")
+    list_display = ("image", "is_active","image_preview")
     list_editable = ("is_active",)
 
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html(
+                '<img src="{}" width="60" height="60" style="object-fit:cover;border-radius:8px;" />',
+                obj.image.url
+            )
+        return "-"
+    
+    image_preview.short_description = "Image"
 @admin.register(SupportedCompany)
 class SupportedCompanyAdmin(SortableAdminMixin,admin.ModelAdmin):
-    list_display = ("company_image", "is_active","company_order")
+    list_display = ("company_image", "is_active","company_order","image_preview")
     list_editable = ("is_active",)
     
+    def image_preview(self, obj):
+        if obj.company_image:
+            return format_html(
+                '<img src="{}" width="80" height="60" style="object-fit:cover;border-radius:8px;" />',
+                obj.company_image.url
+            )
+        return "-"
+    
+    image_preview.short_description = "Image"
 
 @admin.register(QuickLink)
 class QuicklinkAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display = ("id","q_page_name", "q_page_url", "q_order")
     list_editable = ("q_page_name","q_page_url",)
+    
+@admin.register(Informations)
+class InformationAdmin(SortableAdminMixin, admin.ModelAdmin):
+    ordering = ("position",)
+    list_display = ("id","info_title", "info_button_url")
+    list_editable=("info_title","info_button_url")
+    
+@admin.register(Tractor_Page)
+class TractorAdmin(SortableAdminMixin, admin.ModelAdmin):
+    list_display = ("tractor_name", "Price", "order","image_preview")
+    
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html(
+                '<img src="{}" width="120" height="69" style="object-fit:cover;border-radius:8px;" />',
+                obj.image.url
+            )
+        return "-"
+    
+    image_preview.short_description = "Image"
+
+@admin.register(Equipment)
+class EquipmentAdmin(SortableAdminMixin, admin.ModelAdmin):
+    sortable = "order"
+    list_display = ("name", "category", "price", "order","image_preview")
+    list_editable = ("order",)
+    ordering = ("order",)
+
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html(
+                '<img src="{}" width="60" height="60" style="object-fit:cover;border-radius:8px;" />',
+                obj.image.url
+            )
+        return "-"
+    
+    image_preview.short_description = "Image"
+
+@admin.register(Ox)
+class OxAdmin(SortableAdminMixin,admin.ModelAdmin):
+    list_display = ("name","state","weight_range","order","image_preview")
+    list_editable = ("order",)
+    search_fields = ("name", "state")
+    list_filter = ("state",)
+    ordering = ("order",)
+    
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html(
+                '<img src="{}" width="60" height="60" style="object-fit:cover;border-radius:8px;" />',
+                obj.image.url
+            )
+        return "-"
+    
+    image_preview.short_description = "Image"
+
+
+@admin.register(Fertilizer)
+class FertilizerAdmin(SortableAdminMixin, admin.ModelAdmin):
+
+    list_display = ("name","weight","price_range","order","image_preview",)
+
+    list_editable = ("order",)
+    search_fields = ("name", "nutrient", "best_for")
+    ordering = ("order",)
+
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html(
+                '<img src="{}" width="60" height="60" style="object-fit:cover;border-radius:8px;" />',
+                obj.image.url
+            )
+        return "-"
+
+    image_preview.short_description = "Image"
+
+@admin.register(AgroChemical)
+class AgroChemicalAdmin(SortableAdminMixin,admin.ModelAdmin):
+    list_display = ("name","type","pack_size","price","order","image_preview",)
+
+    list_editable = ("order",)
+    search_fields = ("name", "type")
+    list_filter = ("type",)
+    ordering = ("order",)
+
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html(
+                '<img src="{}" width="60" height="60" style="object-fit:cover;border-radius:8px;" />',
+                obj.image.url
+            )
+        return "-"
+    
+    image_preview.short_description = "Image"
+    
+    
+@admin.register(SprayPump)
+class SprayPumpAdmin(SortableAdminMixin, admin.ModelAdmin):
+
+    list_display = ("name","operation_type","pressure","capacity","weight","order","image_preview",)
+    list_editable = ("order",)
+    search_fields = ("name","operation_type","tagline",)
+    ordering = ("order",)
+
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html(
+                '<img src="{}" width="60" height="60" style="object-fit:cover;border-radius:8px;" />',
+                obj.image.url
+            )
+        return "-"
+
+    image_preview.short_description = "Image"

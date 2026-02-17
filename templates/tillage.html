@@ -114,7 +114,7 @@ Tillage Equipment
   }
 </style>
 
-<main class="wrap">
+{% comment %} <main class="wrap">
   <section class="grid">
 
     <article class="card" data-animate>
@@ -188,6 +188,34 @@ Tillage Equipment
       <p class="desc">A chisel plough is used for primary tillage to break and loosen hard soil without inverting it. Its curved heavy-duty shanks penetrate deep to shatter compact layers, improve water infiltration and promote strong root growth. It is ideal for reclaiming hard fields and reducing plough‑pan formation.</p>
       <p class="price">Approx. Price (India): ₹35,000 – ₹1,80,000 depending on number of shanks, frame strength and brand.</p>
     </article>
+
+  </section>
+</main> {% endcomment %}
+<main class="wrap">
+  <section class="grid">
+
+    {% for item in equipment_list %}
+    <article class="card" data-animate>
+      <a class="media" href="">
+        <img src="{{ item.image.url }}" alt="{{ item.name }}">
+      </a>
+
+      <div class="meta">
+        <h2>{{ item.name }}</h2>
+        <div class="badge">{{ item.category }}</div>
+      </div>
+
+      <p class="desc">
+        {{ item.description }}
+      </p>
+
+      <p class="price">
+        {{ item.price }}
+      </p>
+    </article>
+    {% empty %}
+    <p>No equipment available right now.</p>
+    {% endfor %}
 
   </section>
 </main>

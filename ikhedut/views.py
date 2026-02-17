@@ -1,5 +1,5 @@
 from ikhedut.admin import Slider2Admin
-from ikhedut.models.index import Slider_content
+from ikhedut.models import tractor
 from .models import *  # type: ignore[attr-defined]
 from django.db import transaction
 from rest_framework.views import APIView
@@ -151,6 +151,7 @@ def index(request):
         "nav_items": Navbar.objects.all(),
         "supported_companies": SupportedCompany.objects.filter(is_active=True),
         "quick_links": QuickLink.objects.all(),
+        "informations": Informations.objects.all(),
     }
     return render(request, "index.html", context)
     
@@ -237,17 +238,20 @@ def buycrops(request):
     }
     return render(request, "buycrops.html",context)
 
-def tractor(request):
+def tractor_page(request):
     context={
         "nav_items": Navbar.objects.all(),
         "quick_links": QuickLink.objects.all(),
+        "tractors":Tractor_Page.objects.all(),
     }
     return render(request,"tractor.html",context)
 
 def tillage(request):
+    equipment = Equipment.objects.all() 
     context={
         "nav_items": Navbar.objects.all(),
         "quick_links": QuickLink.objects.all(),
+        "equipment_list": equipment,
     }
     return render(request,"tillage.html",context)
 
@@ -255,6 +259,7 @@ def ox(request):
     context={
         "nav_items": Navbar.objects.all(),
         "quick_links": QuickLink.objects.all(),
+        "ox_list": Ox.objects.all(),
     }
     return render(request,"ox.html",context)
 
@@ -262,6 +267,7 @@ def agrochemicals(request):
     context={
         "nav_items": Navbar.objects.all(),
         "quick_links": QuickLink.objects.all(),
+        "chemicals": AgroChemical.objects.all()
     }
     return render(request,"agrochemicals.html",context)
 
@@ -269,6 +275,7 @@ def fertilizer(request):
     context={
         "nav_items": Navbar.objects.all(),
         "quick_links": QuickLink.objects.all(),
+        "fertilizers": Fertilizer.objects.all()
     }
     return render(request,"fertilizer.html",context)
 
@@ -366,6 +373,7 @@ def spraypump(request):
     context={
         "nav_items": Navbar.objects.all(),
         "quick_links": QuickLink.objects.all(),
+        "pumps": SprayPump.objects.all()
     }
     return render(request,'spraypump.html',context)
 
