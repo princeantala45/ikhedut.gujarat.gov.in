@@ -109,53 +109,83 @@
 document.getElementById("signupForm").addEventListener("submit", async function (e) {
   e.preventDefault();
 
-  // 🔴 RE-ENABLE HTML VALIDATION
   if (!this.checkValidity()) {
     this.reportValidity();
     return;
   }
 
-  const formData = new FormData(this);
-try {
-  const response = await fetch("/api/register/", {
-    method: "POST",
-    body: formData,
-  });
+  const password = document.getElementById("password").value;
+  const confirmPassword = this.querySelector('input[name="repassword"]').value;
 
-  const data = await response.json();
+  // Password validation rules
+  const rules = {
+    length: password.length >= 8,
+    uppercase: /[A-Z]/.test(password),
+    lowercase: /[a-z]/.test(password),
+    number: /[0-9]/.test(password),
+    special: /[@#$&!%*?]/.test(password)
+  };
 
-  // ✅ success
-  if (response.ok) {
+  const isValidPassword = Object.values(rules).every(Boolean);
+
+  if (!isValidPassword) {
     Swal.fire({
-      title: "Signup successful!",
-      text: "Your account has been created. Please login.",
-      icon: "success"
-    }).then(() => {
-      window.location.href = "/login/";
+      title: "Invalid Password",
+      text: "Password does not meet the required conditions.",
+      icon: "error"
     });
     return;
   }
 
-  // ❌ backend errors
-  let errorMsg = "";
-  for (const field in data) {
-    errorMsg += `${field}: ${data[field][0]}\n`;
+  if (password !== confirmPassword) {
+    Swal.fire({
+      title: "Password Mismatch",
+      text: "Passwords do not match.",
+      icon: "error"
+    });
+    return;
   }
 
-  Swal.fire({
-    title: "Signup failed",
-    text: errorMsg,
-    icon: "error"
-  });
+  const formData = new FormData(this);
 
-} catch (err) {
-  console.error(err);
-  Swal.fire({
-    title: "Server error",
-    text: "Please try again later.",
-    icon: "error"
-  });
-}
+  try {
+    const response = await fetch("/api/register/", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      Swal.fire({
+        title: "Signup successful!",
+        text: "Your account has been created. Please login.",
+        icon: "success"
+      }).then(() => {
+        window.location.href = "/login/";
+      });
+      return;
+    }
+
+    let errorMsg = "";
+    for (const field in data) {
+      errorMsg += `${field}: ${data[field][0]}\n`;
+    }
+
+    Swal.fire({
+      title: "Signup failed",
+      text: errorMsg,
+      icon: "error"
+    });
+
+  } catch (err) {
+    console.error(err);
+    Swal.fire({
+      title: "Server error",
+      text: "Please try again later.",
+      icon: "error"
+    });
+  }
 });
 </script>
 
