@@ -142,7 +142,7 @@ def sellcrops_page(request):
 class ContactView(viewsets.ModelViewSet):
     queryset = Contact.objects.all()
     serializer_class = Conactserializers
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
 
 @login_required
 def contact(request):
