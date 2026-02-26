@@ -74,9 +74,9 @@
                 <input type="hidden" id="otp_code" />
 
                 <p class="text-xs text-right mt-3">
-                    <button type="button" onclick="resendOTP()" class="text-green-600 hover:underline">
-                        Resend OTP?
-                    </button>
+<button type="button" onclick="requestOTP()" class="text-green-600 hover:underline">
+    Resend OTP?
+</button>
                 </p>
             </div>
 
@@ -239,16 +239,24 @@
         })
             .then(res => res.json())
             .then(data => {
-                Swal.close();
-                if (data.message || data.success) {
-                    document.getElementById("otp-entry-section").classList.remove("hidden");
-                    document.getElementById("verify-btn").disabled = false;
-                    document.getElementById("verify-btn").classList.remove("opacity-50", "cursor-not-allowed");
-                    Swal.fire("OTP Sent", "Verification code sent to email.", "success");
-                } else {
-                    Swal.fire("Error", data.error || "Failed to send OTP", "error");
-                }
-            });
+    Swal.close();
+
+    if (data.error) {
+        // If backend sends: { error: "Email not registered" }
+        Swal.fire("Not Registered", data.error, "warning");
+        return;
+    }
+
+    if (data.message || data.success) {
+        document.getElementById("otp-entry-section").classList.remove("hidden");
+        document.getElementById("verify-btn").disabled = false;
+        document.getElementById("verify-btn").classList.remove("opacity-50", "cursor-not-allowed");
+
+        Swal.fire("OTP Sent", "Verification code sent to email.", "success");
+    } else {
+        Swal.fire("Error", "Failed to send OTP", "error");
+    }
+});
     }
 
     /* VERIFY OTP WITH LOADER */
@@ -271,11 +279,30 @@
                 otp: document.getElementById("otp_code").value
             })
         })
-            .then(res => res.json())
-            .then(data => {
-                Swal.close();
-                handleAuthResponse(data);
-            });
+           .then(res => res.json())
+.then(async data => {
+    Swal.close();
+
+    if (!data.message) {
+        Swal.fire("Error", data.error || "OTP verification failed", "error");
+        return;
+    }
+
+    // OTP verified → now login
+    const loginResponse = await fetch("/otp/login/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken
+        },
+        body: JSON.stringify({
+            email: document.getElementById("email_otp").value
+        })
+    });
+
+    const loginData = await loginResponse.json();
+    handleAuthResponse(loginData);
+});
     });
 
     /* SESSION AUTO LOGOUT */

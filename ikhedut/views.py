@@ -73,7 +73,7 @@ class PostAdGeneric1(generics.ListAPIView,generics.CreateAPIView):
     lookup_field='id'
 
     
-class RegistrerUser(APIView):
+class RegistrerUser(APIView): # type: ignore
     authentication_classes = []   
     permission_classes = [AllowAny]
     parser_classes = [JSONParser,MultiPartParser, FormParser]
@@ -754,7 +754,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model, login
 
 User = get_user_model()
-
 class VerifyOTPView(APIView):
     permission_classes = [AllowAny]
     authentication_classes = []
@@ -763,48 +762,80 @@ class VerifyOTPView(APIView):
         serializer = OTPVerifySerializer(data=request.data)
 
         if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=400)
 
         email = serializer.validated_data["email"] # type: ignore
-        entered_otp = serializer.validated_data["otp"] # type: ignore
+        otp = serializer.validated_data["otp"] # type: ignore
 
-        # Get latest OTP record
         otp_record = OTPRequest.objects.filter(email=email).order_by("-created_at").first()
 
         if not otp_record:
-            return Response({"error": "No OTP found"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "No OTP found"}, status=400)
 
-        # Check expiry (assuming you have is_valid() method)
         if not otp_record.is_valid():
             otp_record.delete()
-            return Response({"error": "OTP expired"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "OTP expired"}, status=400)
 
-        # Check OTP match
-        if otp_record.otp != entered_otp:
-            return Response({"error": "Invalid OTP"}, status=status.HTTP_400_BAD_REQUEST)
+        if str(otp_record.otp) != str(otp):
+            return Response({"error": "Invalid OTP"}, status=400)
 
-        # Get user
-        user = User.objects.filter(email=email).first()
-        if not user:
-            return Response({"error": "User not found"}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Delete OTP after successful verification
         otp_record.delete()
 
-        # ✅ Create Django session login (IMPORTANT FIX)
+        return Response({"message": "OTP verified"}, status=200)
+
+class RegistrerUser(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
+    parser_classes = [JSONParser, MultiPartParser, FormParser]
+
+    def post(self, request):
+
+        email = request.data.get("email")
+        username = request.data.get("username")
+
+        if User.objects.filter(email=email).exists():
+            return Response({"email": ["Email already exists"]}, status=400)
+
+        if User.objects.filter(username=username).exists():
+            return Response({"username": ["Username already exists"]}, status=400)
+
+        serializer = UserSerializers(data=request.data)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=400)
+
+        user = serializer.save()
+
+        refresh = RefreshToken.for_user(user) # type: ignore
+
+        return Response({
+            "message": "Signup successful",
+            "access": str(refresh.access_token),
+            "refresh": str(refresh),
+        }, status=201)
+        
+        
+class OTPLoginView(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def post(self, request):
+        email = request.data.get("email")
+
+        user = User.objects.filter(email=email).first()
+
+        if not user:
+            return Response({"error": "User not found"}, status=400)
+
         login(request, user)
 
-        # ✅ Generate JWT tokens
         refresh = RefreshToken.for_user(user)
         access_token = refresh.access_token
 
-        return Response(
-            {
-                "message": "Login successful",
-                "access": str(access_token),
-                "refresh": str(refresh),
-                "access_expires": access_token["exp"],
-                "username": user.username, # type: ignore
-            },
-            status=status.HTTP_200_OK,
-        )
+        return Response({
+            "message": "Login successful",
+            "access": str(access_token),
+            "refresh": str(refresh),
+            "access_expires": access_token["exp"],
+            "username": user.username, # type: ignore
+        }, status=200)

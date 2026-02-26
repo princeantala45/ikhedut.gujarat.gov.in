@@ -14,6 +14,7 @@ urlpatterns = [
     # email authen            
     path('otp/request/', RequestOTPView.as_view(), name='request-otp'),
     path('otp/resend/', ResendOTPView.as_view(), name='resend-otp'),
+    path("otp/login/", OTPLoginView.as_view(), name="otp-login"),
     path('otp/verify/', VerifyOTPView.as_view(), name='verify-otp'),
                
     path("api/register/", RegistrerUser.as_view()),
