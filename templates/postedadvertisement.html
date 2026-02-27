@@ -24,10 +24,10 @@ Posted-advertisement
         <form method="get" class="flex gap-2">
             <select name="order" onchange="this.form.submit()"
                 class="border border-gray-300 rounded-lg px-3 py-2 text-sm">
-                <option value="new" {% if request.GET.order !='old' %}selected{% endif %}>
+                <option value="new" {% if request.GET.order != 'old' %}selected{% endif %}>
                     Newest first
                 </option>
-                <option value="old" {% if request.GET.order=='old' %}selected{% endif %}>
+                <option value="old" {% if request.GET.order == 'old' %}selected{% endif %}>
                     Oldest first
                 </option>
             </select>

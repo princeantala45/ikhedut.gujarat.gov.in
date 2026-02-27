@@ -348,7 +348,8 @@ def expire_cart_item(request, item_id):
 def postedadvertisement(request):
     order = request.GET.get("order", "new")
 
-    ads = Ad.objects.all().order_by("-id" if order != "old" else "id")
+    ads = Ad.objects.filter(is_approved=True) \
+        .order_by("-id" if order != "old" else "id")
 
     context = {
         "ads": ads,

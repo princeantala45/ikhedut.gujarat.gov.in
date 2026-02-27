@@ -11,7 +11,8 @@ SECRET_KEY = os.environ.get(
     "1b604c7567ae32d0bf02685eb94bb43e"
 )
 
-DEBUG = os.environ.get("DEBUG", "False") == "True"
+# DEBUG = os.environ.get("DEBUG", "False") == "True"
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "ikhedut-portal.onrender.com",
@@ -237,18 +238,24 @@ LOGIN_URL = "login"
 
 # AUTH_USER_MODEL = 'ikhedut.User'
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
+<<<<<<< HEAD
 # EMAIL_HOST_USER = 'infoikhedutportal@gmail.com'
 # EMAIL_HOST_PASSWORD = 'ygdg unzo sxik pely'
+=======
+EMAIL_HOST_USER = 'infoikhedutportal@gmail.com'
+EMAIL_HOST_PASSWORD = 'ygdg unzo sxik pely'
+>>>>>>> 7be24b5 (admin panel UI changing)
 
 
 
 import os
 
+<<<<<<< HEAD
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 EMAIL_HOST = "smtp.sendgrid.net"
@@ -259,3 +266,18 @@ EMAIL_HOST_USER = "apikey"
 EMAIL_HOST_PASSWORD = os.environ.get("SENDGRID_API_KEY")
 
 DEFAULT_FROM_EMAIL = "infoikhedutportal@gmail.com"
+=======
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_HOST = "smtp.gmail.com"
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+
+# EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+# EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# CSRF_TRUSTED_ORIGINS = [
+#     "https://ikhedut-portal.onrender.com",
+# ]
+>>>>>>> 7be24b5 (admin panel UI changing)

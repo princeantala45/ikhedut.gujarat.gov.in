@@ -23,3 +23,8 @@ class Ad(models.Model):
         if self.user:
             return f"{self.productname} ({self.user.username})"
         return self.productname
+
+    def save(self, *args, **kwargs):
+        if self.productname:
+            self.productname = self.productname.title()
+        super().save(*args, **kwargs)
