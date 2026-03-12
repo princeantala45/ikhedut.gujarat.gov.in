@@ -1,6 +1,6 @@
 <!-- Animated Header -->
 <p align="center">
-<img src="https://readme-typing-svg.herokuapp.com?font=Poppins&size=36&duration=3500&color=22C55E&center=true&vCenter=true&width=900&lines=🌾+iKhedut+Portal;Django+Based+Farmer+Service+Platform;Smart+Agriculture+Scheme+Management+System;Empowering+Farmers+Through+Technology" />
+<img src="https://readme-typing-svg.herokuapp.com?font=Poppins&size=36&duration=3500&color=22C55E&center=true&vCenter=true&width=900&lines=🌾+iKhedut+Portal;Django+Based+Farmer+Service+Platform;Smart+Agriculture+Scheme+Management;Empowering+Farmers+Through+Technology" />
 </p>
 
 ---
@@ -19,7 +19,7 @@
 </p>
 
 <p align="center">
-A web-based platform inspired by the Gujarat Government iKhedut system that helps farmers easily access agricultural schemes, information, and services through a simple digital interface.
+A web-based platform inspired by the Gujarat Government iKhedut system that helps farmers access agriculture schemes and services through a simple and user-friendly digital portal.
 </p>
 
 ---
@@ -32,62 +32,50 @@ A web-based platform inspired by the Gujarat Government iKhedut system that help
 
 # 🌱 About The Project
 
-The **iKhedut Portal** is designed to simplify access to government agriculture schemes and farmer support services.  
-This project demonstrates how a digital platform can make it easier for farmers to explore schemes, get information, and interact with agricultural services without visiting government offices.
+The **iKhedut Portal** is designed to provide farmers with easy access to information about government agriculture schemes and farming support programs.
 
-The platform focuses on creating a **simple, accessible, and farmer-friendly interface** that can be used from both mobile and desktop devices.
+The portal demonstrates how digital platforms can improve accessibility to government services by allowing farmers to explore schemes, read detailed information, and interact with services online.
 
-This project is developed using the **Django web framework**, which provides a secure and scalable backend architecture.
+The system focuses on creating a **simple, responsive, and farmer-friendly interface** that works across mobile phones, tablets, and desktop devices.
+
+This project is built using the **Django web framework**, providing a secure and scalable backend for managing web applications.
 
 ---
 
 # ✨ Key Features
 
 🌾 Easy access to agriculture schemes  
-📄 Detailed information about government farming programs  
-📝 Simple and user-friendly scheme application interface  
-📱 Fully responsive design for mobile and desktop  
-⚡ Fast loading web pages  
-🔒 Secure backend using Django framework  
-🎯 Clean and intuitive navigation system  
-🌍 Accessible from anywhere through the internet
+📄 Detailed information about farming programs  
+📝 Simple scheme application interface  
+📱 Mobile-friendly responsive design  
+⚡ Fast and lightweight web pages  
+🔒 Secure backend powered by Django  
+🎯 Clean and intuitive navigation  
+🌍 Accessible online from any device
 
 ---
 
 # 🛠 Technologies Used
 
 ### Backend
-- Python
-- Django
+- Python  
+- Django  
 
 ### Frontend
-- HTML5
-- CSS3
-- JavaScript
-- Bootstrap (UI styling)
+- HTML5  
+- CSS3  
+- JavaScript  
+- Bootstrap  
 
 ### Database
-- SQLite (Django default database)
+- SQLite  
 
 ### Deployment
-- Render Cloud Platform
+- Render Cloud Platform  
 
 ### Version Control
-- Git
-- GitHub
-
----
-
-# 🌾 Purpose of the Project
-
-The purpose of this project is to demonstrate how technology can improve the accessibility of agriculture services.
-
-This system aims to:
-
-- Digitize agriculture scheme information
-- Provide a simple portal for farmers
-- Improve accessibility of government programs
-- Showcase modern web development using Django
+- Git  
+- GitHub  
 
 ---
 
@@ -99,41 +87,28 @@ This system aims to:
 
 ---
 
-# 📊 GitHub Statistics
-
-<p align="center">
-
-<img src="https://github-readme-stats.vercel.app/api?username=yourusername&show_icons=true&theme=tokyonight">
-
-<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=yourusername&layout=compact&theme=tokyonight">
-
-</p>
-
----
-
 # 🤝 Contribution
 
-Contributions are welcome from developers who want to improve the project or add new features.
+Contributions are welcome for improving this project.
 
-Possible improvements may include:
+Possible enhancements may include:
 
-- adding more scheme categories  
 - improving UI/UX design  
 - adding authentication system  
-- integrating real agriculture APIs  
+- integrating additional agriculture schemes  
+- connecting external agriculture APIs  
+- enhancing farmer dashboard features  
 
 ---
 
 # 🌟 Support
 
-If you find this project helpful, consider giving it a ⭐ on GitHub.  
-Your support helps encourage further development and improvements.
+If you find this project useful, consider giving it a ⭐ on GitHub.
 
 ---
 
 # 📜 Disclaimer
 
-This project is created for **educational and demonstration purposes only**.  
-It is **not affiliated with the official Government iKhedut portal**.
+This project is created for **educational and demonstration purposes only** and is **not affiliated with the official iKhedut portal of the Government of Gujarat**.
 
 ---
