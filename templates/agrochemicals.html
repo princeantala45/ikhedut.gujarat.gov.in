@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  Agrochemicals
+{% endblock %}
+
+{% block content %}
+  <div class="max-w-7xl mx-auto px-4 py-10 mt-14">
+    <main class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {% for item in chemicals %}
+        <article class="bg-white rounded-2xl shadow-sm overflow-hidden flex flex-col">
+          <div class="h-52 bg-gray-100 p-2">
+            <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full rounded-2xl h-full object-cover" />
+          </div>
+
+          <div class="p-6 flex flex-col gap-4 flex-1">
+            <div>
+              <h3 class="text-xl font-semibold text-gray-900">{{ item.name }}</h3>
+              <p class="text-sm text-gray-600 mt-1">{{ item.short_description }}</p>
+            </div>
+
+            <p class="text-sm text-gray-700 leading-relaxed flex-1">{{ item.description }}</p>
+
+            <div class="flex flex-wrap gap-2">
+              <span class="px-3 py-1 text-xs bg-gray-100 rounded-full">Type: {{ item.type }}</span>
+              <span class="px-3 py-1 text-xs bg-gray-100 rounded-full">Pack: {{ item.pack_size }}</span>
+              <span class="px-3 py-1 text-xs bg-gray-100 rounded-full">Use: {{ item.use }}</span>
+            </div>
+
+            <div class="text-red-600 font-semibold text-lg">Approx. Price: {{ item.price }}</div>
+          </div>
+        </article>
+      {% endfor %}
+    </main>
+  </div>
+{% endblock %}

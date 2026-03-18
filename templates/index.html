@@ -1,0 +1,320 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+  Home
+{% endblock %}
+{% comment %}----------------------slider--------------------------{% endcomment %}
+
+{% block content %}
+  <div id="carouselExampleControlsNoTouching" class="carousel slide" data-bs-touch="false">
+    <div class="carousel-inner">
+      {% for Slider in sliders %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+          <img src="{{ Slider.image.url }}" class="d-block w-100" alt="Slider image" style="height:445px; object-fit:cover;" />
+        </div>
+      {% endfor %}
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" style="background-color: black;" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="next">
+      <span class="carousel-control-next-icon" style="background-color: black;" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+  {% comment %}-----------------------------welcome-section----------------------------{% endcomment %}
+
+  <section class="px-5 md:px-20 py-12">
+    <h1 id="all-header1" class="text-2xl md:text-3xl font-bold text-center mb-12 text-green-700">Welcome to iKhedut Portal</h1>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <!-- Slider -->
+      <div id="small-slider" class="relative max-w-xl mx-auto w-full">
+        <div class="relative overflow-hidden rounded-tl-[80px] rounded-br-[80px] rounded-tr-2xl rounded-bl-2xl shadow-lg">
+          <div id="sliderBox" class="flex snap-x snap-mandatory overflow-x-auto scroll-smooth h-[260px] sm:h-[320px] md:h-[380px] scrollbar-hide">
+            {% for slider2object in sliders2 %}
+              <img src="{{ slider2object.image.url }}" alt="" class="w-full h-full object-cover flex-shrink-0 snap-center" />
+            {% endfor %}
+          </div>
+          <!-- Left Button -->
+          <button onclick="slideLeft()" class="absolute left-4 top-1/2 -translate-y-1/2 bg-green-700/90 hover:bg-green-800 text-white w-9 h-9 rounded-full flex items-center justify-center shadow-md"><i class="fa-solid fa-angle-left"></i></button>
+
+          <!-- Right Button -->
+          <button onclick="slideRight()" class="absolute right-4 top-1/2 -translate-y-1/2 bg-green-700/90 hover:bg-green-800 text-white w-9 h-9 rounded-full flex items-center justify-center shadow-md"><i class="fa-solid fa-angle-right"></i></button>
+        </div>
+      </div>
+      {% comment %}Agriculture is one of the strongest pillars of our country’s economic and social growth. It provides food, raw materials, and employment, which is why a large part of rural India still depends on farming.{% endcomment %}
+
+      {% comment %}Along with traditional practices, modern methods like drip irrigation, organic farming, and advanced machinery are helping farmers increase productivity. Despite challenges such as climate change and water scarcity, farmers continue to adapt by using new techniques and government schemes to improve their livelihood.{% endcomment %}
+      <!-- Text Content -->
+
+      <div class="text-gray-700 leading-relaxed text-base md:text-lg overflow-x-hidden">
+        {% if slider_content %}
+          <div id="welcome-text-1">{{ slider_content.first_line_text|safe }}</div>
+          <br />
+          <div id="welcome-text-2">{{ slider_content.second_line_text|safe }}</div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <section class="py-8 bg-gradient-to-r from-gray-50 to-gray-100">
+    <div class="px-4 mb-8 text-center">
+      <h1 id="all-header2" class="text-2xl md:text-3xl font-semibold text-green-700">Buy Our Products</h1>
+    </div>
+
+    <a href="/buycrops" class="block overflow-hidden">
+      <div class="crop-marquee">
+        <div class="crop-track">
+          {% for crop in crops %}
+            <div class="crop-card">
+              <p class="text-sm font-semibold text-gray-800 text-center">{{ crop.crop|title }}</p>
+
+              {% if crop.image %}
+                <img src="{{ crop.image.url }}" alt="{{ crop.crop }}" />
+              {% else %}
+                <div class="empty-img"></div>
+              {% endif %}
+            </div>
+          {% endfor %}
+
+          <!-- Duplicate loop for smooth infinite scroll -->
+          {% for crop in crops %}
+            <div class="crop-card">
+              <p class="text-sm font-semibold text-gray-800 text-center">{{ crop.crop|title }}</p>
+
+              {% if crop.image %}
+                <img src="{{ crop.image.url }}" alt="{{ crop.crop }}" />
+              {% else %}
+                <div class="empty-img"></div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </a>
+  </section>
+
+  <section class="py-12 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="mb-12 text-center">
+        <h1 class="text-2xl sm:text-3xl font-semibold text-green-700">Informations</h1>
+        <p class="mt-2 text-gray-600 text-sm sm:text-base">Tools, equipment, and essentials for modern farming</p>
+      </div>
+
+      <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        {% for info in informations %}
+          <div class="group bg-white rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+            <div class="p-6 flex flex-col h-full">
+              <div class="flex justify-center mb-6">
+                <img src="{{ info.info_image.url }}" alt="{{ info.info_title }}" class="w-32 h-28 object-contain group-hover:scale-110 transition duration-300" />
+              </div>
+
+              <h2 id="information-heading" class="text-xl font-semibold text-gray-800 mb-3 text-center">{{ info.info_title }}</h2>
+
+              <p id="information-text" class="text-gray-600 text-sm leading-relaxed flex-grow text-center">{{ info.info_text }}</p>
+
+              <a href="{{ info.info_button_url }}" class="mt-6 flex justify-center">
+                <button class="cssbuttons-io-button w-[160px] sm:w-auto justify-center">
+                  View More<div class="icon">
+                    <svg height="24" width="24" viewBox="0 0 24 24">
+                      <path d="M0 0h24v24H0z" fill="none"></path>
+                      <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" fill="currentColor"></path>
+                    </svg>
+                  </div>
+                </button>
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- --- -->
+   {% comment %} --> --> --> --> -----------------------------------india-map--------------------------------- --> {% endcomment %}
+  <section class="w-full min-h-screen">
+    <div class="grid grid-cols-1 lg:grid-cols-2 min-h-screen">
+      <!-- Left: Map -->
+      <div class="flex items-center justify-center bg-white px-4 sm:px-6 md:px-10 py-8 sm:py-10">
+        <img src="{% static 'map-img/map-new.jpg' %}" alt="India Map" class="w-full max-w-md sm:max-w-lg lg:max-w-xl max-h-[70vh] sm:max-h-[75vh] lg:max-h-[80vh] object-contain" />
+      </div>
+
+      <!-- Right: Text Panel -->
+      <div class="bg-gradient-to-br from-green-500 to-green-600 flex items-center">
+        <div class="px-5 sm:px-8 md:px-12 lg:px-16 py-10 sm:py-12 max-w-xl overflow-x-hidden">
+          <!-- Title -->
+          <div id="india-map-text-1" class="text-white text-lg sm:text-2xl md:text-3xl font-bold uppercase leading-snug mb-4 sm:mb-6">
+            Reliable Farming <br />
+            Support and Supply
+          </div>
+
+          <p id="india-map-text-2" class="text-gray-900 text-sm sm:text-base md:text-lg leading-relaxed font-medium">Quality fertilizers and agrochemicals tailored for modern farming needs. We guide farmers in selecting the right products and using them effectively. With expert advice and easy access to essential supplies, crops stay healthy and yields improve naturally.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- --- -->
+   {% comment %} --> --> --> --> ------------------------------------box-infos---------------------------- --> {% endcomment %}
+  <section>
+    <div class="flex flex-wrap justify-center gap-6 p-6 bg-white-100" style="padding-top: 80px; padding-bottom:80px;">
+      <!-- Feature 1: Simple Guidance -->
+      <div id="feature-box1" class="w-64 h-48 flex flex-col items-center justify-center rounded-lg shadow infos" id="info-box1">
+        <i class="fas fa-book-open text-green-500 text-4xl mb-3" id="icon"></i>
+        <h3 class="text-lg font-semibold text-[#0f172a]">Simple Guidance</h3>
+      </div>
+
+      <!-- Feature 2: Quality Inputs -->
+      <div id="feature-box2" class="w-64 h-48 flex flex-col items-center justify-center rounded-lg shadow infos" id="info-box2">
+        <i class="fas fa-seedling text-green-500 text-4xl mb-3" id="icon"></i>
+        <h3 class="text-lg font-semibold text-[#0f172a]">Quality Inputs</h3>
+      </div>
+
+      <!-- Feature 3: Anytime Support -->
+      <div id="feature-box3" class="w-64 h-48 flex flex-col items-center justify-center rounded-lg shadow infos" id="info-box3">
+        <i class="fa-solid fa-clock text-green-500 text-4xl mb-3" id="icon"></i>
+        <h3 class="text-lg font-semibold text-[#0f172a]">Anytime Support</h3>
+      </div>
+
+      <!-- Feature 4: Secure & Trusted Platform -->
+      <div id="feature-box4" class="w-64 h-48 flex flex-col items-center justify-center rounded-lg shadow infos" id="info-box4">
+        <i class="fas fa-lock text-green-500 text-4xl mb-3" id="icon"></i>
+        <h3 class="text-lg font-semibold text-[#0f172a]">Secure & Trusted Platform</h3>
+      </div>
+    </div>
+  </section>
+
+  <!-- --- -->
+   {% comment %} --> --> --> --> -----------------------------------mission-and-vision-------------------------------- --> {% endcomment %}
+  <section style="overflow: hidden;">
+    <div id="padding-mission" class="py-8 px-4 bg-amber-200" style="background-color: #e6dacb;">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 p-6 md:p-5 md:pl-20 md:pr-20">
+        <!-- Mission -->
+        <div class="flex flex-col justify-top items-center text-justify space-y-4 w-full md:w-1/2">
+          <h2 id="all-header6" class="mission-and-vision-h1-1 text-2xl font-bold text-orange-500">OUR MISSION</h2>
+          <p id="mission-text" class="mission-text text-gray-700 text-sm md:text-lg">Our mission is to create a reliable and accessible digital platform that supports farmers at every stage of their agricultural journey. We aim to provide quality farming inputs such as fertilizers, agrochemicals and equipment while also offering accurate information, expert guidance and practical solutions that help farmers make better decisions. By combining traditional knowledge with modern techniques, we want to simplify daily farming tasks, improve crop health and increase productivity in a sustainable way. We are committed to building a system where every farmer feels supported, informed and empowered to achieve better results, grow stronger crops and secure a more stable livelihood for their families and communities.</p>
+        </div>
+
+        <!-- Vision -->
+        <div class="flex flex-col justify-top items-center text-justify space-y-3 w-full md:w-1/2">
+          <h2 id="all-header7" class="mission-and-vision-h1-2 text-2xl font-bold text-orange-500">OUR VISION</h2>
+          <p id="vision-text" class="vision-text-1 text-gray-700 text-sm md:text-lg">Our vision is to build a future where every farmer, regardless of location or resources, has equal access to the tools, knowledge and technology needed for successful farming. We want to develop a unified digital ecosystem that connects farmers with modern solutions, expert advice and trustworthy agricultural services. By encouraging the adoption of smart farming methods, improving access to high-quality products and creating a platform for continuous learning, we aim to strengthen the agricultural sector and uplift rural communities. We imagine a future where farming becomes more efficient, sustainable and profitable, allowing farmers to grow with confidence while contributing to the overall development of the nation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- --- -->
+   {% comment %} --> --> --> --> ------------------map-section------------------------- --> {% endcomment %}
+
+
+  <!-- Map Section -->
+  <section class="px-5 md:px-20 py-16 bg-white-100">
+    <div class="px-4 mb-8 text-center">
+      <h1 id="all-header4" class="text-2xl md:text-3xl font-semibold text-green-700">We Are Located Here</h1>
+    </div>
+
+    <div class="w-full h-[300px] md:h-[480px] rounded-xl overflow-hidden shadow-lg">
+      <iframe class="w-full h-full" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d29650.636685045436!2d70.46027905!3d21.728744699999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39581e16560474af%3A0x3bd763433745a173!2sDhoraji%2C%20Gujarat!5e0!3m2!1sen!2sin!4v1772192159818!5m2!1sen!2sin"></iframe>
+    </div>
+  </section>
+
+  <!-- --- -->
+   {% comment %} --> --> --> --> ---------------------supported-companys---------------------------- --> {% endcomment %}
+  <section>
+    <div class="supported-company">
+      <div class="px-4 mb-2 text-center">
+        <h1 id="all-header5" class="text-2xl md:text-3xl font-semibold text-green-700">Supported Integrations</h1>
+      </div>
+
+      <div class="marquee-wrapper">
+        <div class="marquee-track">
+          {% for supported_company_obj in supported_companies %}
+            <img src="{{ supported_company_obj.company_image.url }}" alt="" />
+          {% endfor %}
+
+          <!-- Duplicate for smooth infinite scroll -->
+          {% for supported_company_obj in supported_companies %}
+            <img src="{{ supported_company_obj.company_image.url }}" alt="" />
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% comment %}================================customer-review============================={% endcomment %}
+  <section class="bg-gradient-to-br from-gray-50 to-white py-20 px-6 overflow-hidden">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+        <div class="lg:sticky lg:top-20">
+          <span class="inline-block px-4 py-1 mb-4 text-xs font-bold tracking-widest text-green-600 uppercase bg-green-50 rounded-full">Success Stories</span>
+          <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">Why Farmers Trust <span class="text-green-600">Ikhedut Portal</span></h2>
+          <p class="mt-6 text-lg text-gray-600 leading-relaxed max-w-md">Don’t just take our word for it. See how we are helping farmers, producers, and agribusiness owners manage and grow their work efficiently.</p>
+
+          <div class="mt-10 flex gap-10 items-center border-t border-gray-100 pt-8">
+            <div>
+              <p class="text-3xl font-bold text-gray-900">2K+</p>
+              <p class="text-sm text-gray-400 font-medium uppercase tracking-wider">Active Users</p>
+            </div>
+            <div class="h-12 w-px bg-gray-200"></div>
+            <div>
+              <p class="text-3xl font-bold text-gray-900">4/5</p>
+              <p class="text-sm text-gray-400 font-medium uppercase tracking-wider">User Rating</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-8">
+          <div id="customer-review-box-1" class="group bg-white rounded-2xl shadow-sm hover:shadow-xl p-8 transition-all duration-500 border border-gray-100 transform hover:-translate-y-2">
+            <div class="flex flex-col sm:flex-row gap-6">
+              <div class="relative flex-shrink-0">
+                <img src="https://randomuser.me/api/portraits/men/69.jpg" alt="Ramesh Patel" class="w-16 h-16 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 ring-4 ring-green-50" />
+                <div class="absolute -top-2 -left-2 text-green-400 opacity-20 text-6xl font-serif">“</div>
+              </div>
+              <div>
+                <p class="text-gray-700 text-lg leading-relaxed mb-6 italic">“Ikhedut Portal is a reliable and user-friendly platform that truly supports farmers.”</p>
+                <div>
+                  <h4 class="font-bold text-gray-900 text-base">Ramesh Patel</h4>
+                  <p class="text-sm text-green-500 font-medium uppercase tracking-tighter">Farmer, Gujarat</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="customer-review-box-2" class="group bg-white rounded-2xl shadow-sm hover:shadow-xl p-8 transition-all duration-500 border border-gray-100 transform hover:-translate-y-2 lg:ml-12">
+            <div class="flex flex-col sm:flex-row gap-6">
+              <div class="relative flex-shrink-0">
+                <img src="https://randomuser.me/api/portraits/women/84.jpg" alt="Meena Chaudhary" class="w-16 h-16 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 ring-4 ring-green-50" />
+              </div>
+              <div>
+                <p class="text-gray-700 text-lg leading-relaxed mb-6 italic">“An excellent initiative that bridges the gap between farmers and digital services.”</p>
+                <div>
+                  <h4 class="font-bold text-gray-900 text-base">Meena Chaudhary</h4>
+                  <p class="text-sm text-green-500 font-medium uppercase tracking-tighter">Farmer, Rajasthan</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="customer-review-box-3" class="group bg-white rounded-2xl shadow-sm hover:shadow-xl p-8 transition-all duration-500 border border-gray-100 transform hover:-translate-y-2">
+            <div class="flex flex-col sm:flex-row gap-6">
+              <div class="relative flex-shrink-0">
+                <img src="https://randomuser.me/api/portraits/men/56.jpg" alt="Mahesh Singh" class="w-16 h-16 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 ring-4 ring-green-50" />
+              </div>
+              <div>
+                <p class="text-gray-700 text-lg leading-relaxed mb-6 italic">“Everything is well organized and easy to understand.”</p>
+                <div>
+                  <h4 class="font-bold text-gray-900 text-base">Mahesh Singh</h4>
+                  <p class="text-sm text-green-500 font-medium uppercase tracking-tighter">Farmer, UP</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

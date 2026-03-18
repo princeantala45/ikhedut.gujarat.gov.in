@@ -1,0 +1,250 @@
+{% extends "base.html" %}
+
+{% block title %}
+Sell Crops
+{% endblock title %} 
+
+{% block content %}
+
+<div class="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-8 mt-12">
+    <div class="w-full max-w-xl bg-white rounded-xl shadow-lg p-6 sm:p-8">
+        <h2 id="otherpageheader" class="text-2xl font-semibold text-center text-gray-800 mb-6">
+            Sell Your Crops
+        </h2>   
+
+        <form method="post" id="sellForm" enctype="multipart/form-data">
+
+            {% csrf_token %} 
+
+            <div>
+                <label for="crop" class="block text-sm font-medium text-gray-700 mb-2 mt-2">
+                    Select Crop / Produce
+                </label> 
+
+                <select name="crop" id="crop" required
+                    class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                    <option value="">-- Select Item --</option>
+
+                    <!-- Crops -->
+                    <optgroup label="🌾 Crops">
+                        <option value="wheat">🌾 Wheat</option>
+                        <option value="rice">🍚 Rice</option>
+                        <option value="corn">🌽 Corn</option>
+                        <option value="cotton">🧵 Cotton</option>
+                        <option value="groundnut">🥜 Groundnut</option>
+                        <option value="sugarcane">🍬 Sugarcane</option>
+                    </optgroup>
+
+                    <!-- Vegetables -->
+                    <optgroup label="🥕 Vegetables">
+                        <option value="tomato">🍅 Tomato</option>
+                        <option value="potato">🥔 Potato</option>
+                        <option value="onion">🧅 Onion</option>
+                        <option value="garlic">🧄 Garlic</option>
+                        <option value="carrot">🥕 Carrot</option>
+                        <option value="cabbage">🥬 Cabbage</option>
+                        <option value="cauliflower">🥦 Cauliflower</option>
+                        <option value="chilli">🌶️ Chilli</option>
+                        <option value="brinjal">🍆 Brinjal</option>
+                    </optgroup>
+
+                    <!-- Fruits -->
+                    <optgroup label="🍎 Fruits">
+                        <option value="apple">🍎 Apple</option>
+                        <option value="banana">🍌 Banana</option>
+                        <option value="mango">🥭 Mango</option>
+                        <option value="orange">🍊 Orange</option>
+                        <option value="grapes">🍇 Grapes</option>
+                        <option value="papaya">🍈 Papaya</option>
+                        <option value="watermelon">🍉 Watermelon</option>
+                    </optgroup>
+                </select>
+
+            </div>
+
+            <!-- Quantity -->
+            <div>
+                <label for="quantity" class="block text-sm font-medium text-gray-700 mb-2 mt-2">
+                    Quantity (Kg)
+                </label>
+                <input type="number" name="quantity" id="quantity" min="20" max="100000" required
+                    class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                <p class="text-xs text-gray-500 mt-1">
+                    Minimum 20 Kg and maximum 100,000 Kg allowed
+                </p>
+            </div>
+
+            <!-- Price -->
+            <div style="cursor: not-allowed;">
+                <label style="cursor: not-allowed;" for="price" class="block text-sm font-medium text-gray-700 mb-2 mt-2">
+                    Expected Price (₹ per 20 KG)
+                </label>
+                <input style="cursor: not-allowed;" type="number" name="price" id="price" readonly
+                    class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-green-500">
+            </div>
+
+            <!-- Crop Image -->
+            <div>
+                <label for="image" class="block text-sm font-medium text-gray-700 mb-2 mt-2">
+                    Crop Image
+                </label>
+                <input type="file" name="image" id="image" accept="image/*" required class="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
+            </div>
+
+            <!-- Submit Button -->
+
+            <div class="pt-3 flex justify-center lg:justify-start">
+                <button type="submit" class="cssbuttons-io-button">
+                    Submit Crop Details
+                    <div class="icon">
+                        <svg height="24" width="24" viewBox="0 0 24 24">
+                            <path d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
+                                fill="currentColor"></path>
+                        </svg>
+                    </div>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Auto Price Script -->
+<script>
+    const cropPrices = {
+        wheat: 500,
+        rice: 480,
+        corn: 460,
+        cotton: 1200,
+        groundnut: 900,
+        sugarcane: 800,
+
+        tomato: 500,
+        potato: 360,
+        onion: 300,
+        garlic: 3200,
+        carrot: 600,
+        cabbage: 300,
+        cauliflower: 440,
+        chilli: 1200,
+        brinjal: 500,
+
+        apple: 3000,
+        banana: 500,
+        mango: 2200,
+        orange: 1200,
+        grapes: 1600,
+        papaya: 500,
+        watermelon: 360
+    };
+
+    const cropSelect = document.getElementById("crop");
+    const priceInput = document.getElementById("price");
+
+cropSelect.addEventListener("change", () => {
+    if (cropSelect.value) {
+        priceInput.disabled = false;
+        priceInput.value = cropPrices[cropSelect.value];
+    } else {
+        priceInput.value = "";
+        priceInput.disabled = true;
+    }
+});
+</script>
+
+
+<script>
+document.getElementById("sellForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const form = this;
+    const submitBtn = form.querySelector('button[type="submit"]');
+
+    let access = localStorage.getItem("access");
+    let refresh = localStorage.getItem("refresh");
+
+    if (!access) {
+        window.location.href = "/login/";
+        return;
+    }
+
+    submitBtn.disabled = true;
+
+    const formData = new FormData(form);
+
+    try {
+        let response = await fetch("/generic-sellcrops/", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${access}`
+            },
+            body: formData
+        });
+
+        if (response.status === 401 && refresh) {
+            const refreshRes = await fetch("/api/token/refresh/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ refresh })
+            });
+
+            if (!refreshRes.ok) {
+                localStorage.clear();
+                window.location.href = "/login/";
+                return;
+            }
+
+            const refreshData = await refreshRes.json();
+            access = refreshData.access;
+            localStorage.setItem("access", access);
+
+            response = await fetch("/generic-sellcrops/", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${access}`
+                },
+                body: formData
+            });
+        }
+
+        const data = await response.json();
+
+if (response.ok) {
+    Swal.fire({
+        title: "Submission successful!",
+        text:
+            data?.message ||
+            "Advertisement submitted successfully. Waiting for admin approval. Check status on user profile",
+        icon: "success"
+    }).then(() => {
+        location.reload();   // refresh page after user clicks OK
+    });
+        } else {
+            console.error("API error:", response.status, data);
+            Swal.fire({
+                title: "Submission failed",
+                text:
+                    data?.error ||
+                    data?.detail ||
+                    "Submission failed. Please check your inputs and try again.",
+                icon: "error"
+            });
+        }
+    } catch (error) {
+        console.error("Network error:", error);
+        Swal.fire({
+            title: "Network error",
+            text: "Please check your connection and try again.",
+            icon: "error"
+        });
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Submit Advertisement";
+    }
+});
+
+
+</script>
+
+
+{% endblock content %}

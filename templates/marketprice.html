@@ -1,0 +1,329 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Mandi Prices
+{% endblock title %}
+
+{% block content %}
+
+<div class="text-center pb-10" style="margin-top: 80px;">
+  <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight" style="color: green;">
+    🌾 APMC Crop Market Prices
+  </h1>
+  <p class="text-gray-500 mt-2 text-sm sm:text-base">
+    Check latest mandi prices across states, districts and markets
+  </p>
+</div>
+
+
+<main class="bg-gray-100 min-h-screen px-3 sm:px-6 py-6 sm:py-10">
+  <div class="max-w-6xl mx-auto space-y-6">
+
+    <!-- Filters -->
+    <div class="bg-white rounded-xl shadow border border-gray-200 p-4 sm:p-6">
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+
+        <select id="stateSelect"
+          class="w-full px-3 py-2 text-sm rounded-md border border-gray-300 bg-gray-50 focus:ring-1 focus:ring-green-600 focus:outline-none">
+          <option value="">State</option>
+        </select>
+
+        <select id="districtSelect"
+          class="w-full px-3 py-2 text-sm rounded-md border border-gray-300 bg-gray-50 focus:ring-1 focus:ring-green-600 focus:outline-none">
+          <option value="">District</option>
+        </select>
+
+        <select id="marketSelect"
+          class="w-full px-3 py-2 text-sm rounded-md border border-gray-300 bg-gray-50 focus:ring-1 focus:ring-green-600 focus:outline-none">
+          <option value="">Market</option>
+        </select>
+
+        <!-- Crop Search -->
+        <div class="relative">
+          <input type="text" id="commodityInput" placeholder="Search crop..." autocomplete="off"
+            class="w-full px-3 py-2 text-sm rounded-md border border-gray-300 bg-gray-50 focus:ring-1 focus:ring-green-600 focus:outline-none" />
+          <div id="suggestions"
+            class="absolute hidden bg-white border border-gray-200 rounded-md shadow mt-1 w-full max-h-48 overflow-y-auto z-50 text-sm">
+          </div>
+        </div>
+
+                    <button class="cssbuttons-io-button" onclick="loadPrices()">
+                        Search
+                        <div class="icon">
+                            <svg height="24" width="24" viewBox="0 0 24 24">
+                                <path d="M0 0h24v24H0z" fill="none"></path>
+                                <path
+                                    d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
+                                    fill="currentColor"></path>
+                            </svg>
+                        </div>
+                    </button>
+
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="bg-white rounded-xl shadow border border-gray-200 overflow-hidden">
+
+      <div class="px-4 py-3 bg-gray-50 border-b flex justify-between items-center">
+        <h3 class="text-sm font-semibold text-gray-700">
+          Results
+        </h3>
+        <span id="resultCount" class="text-xs text-gray-500"></span>
+      </div>
+
+      <!-- Desktop Table -->
+      <div class="hidden md:block overflow-x-auto">
+        <table class="min-w-full text-sm text-gray-700">
+          <thead>
+            <tr class="bg-green-600 text-white text-left text-xs uppercase tracking-wide">
+              <th class="px-4 py-3">Commodity</th>
+              <th class="px-4 py-3">Min</th>
+              <th class="px-4 py-3">Max</th>
+              <th class="px-4 py-3">Avg</th>
+              <th class="px-4 py-3">Date</th>
+            </tr>
+          </thead>
+          <tbody id="priceTableDesktop" class="divide-y divide-gray-200"></tbody>
+        </table>
+      </div>
+
+      <!-- Mobile Cards -->
+      <div id="priceTableMobile" class="md:hidden p-3 space-y-3"></div>
+
+      <div id="emptyState" class="text-center py-8 text-gray-400 hidden text-sm">
+        No data available.
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+<script>
+  const API_KEY = "579b464db66ec23bdd0000012eb03de7bc5649d37a0ed121513748f2";
+  const BASE_URL = "https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070";
+
+  const stateSelect = document.getElementById("stateSelect");
+  const districtSelect = document.getElementById("districtSelect");
+  const marketSelect = document.getElementById("marketSelect");
+  const commodityInput = document.getElementById("commodityInput");
+  const suggestionsBox = document.getElementById("suggestions");
+  const tableBodyDesktop = document.getElementById("priceTableDesktop");
+  const tableBodyMobile = document.getElementById("priceTableMobile");
+  const emptyState = document.getElementById("emptyState");
+  const resultCount = document.getElementById("resultCount");
+
+  let commodityCache = [];
+  let selectedIndex = -1;
+
+  async function fetchData(params = {}) {
+    const url = new URL(BASE_URL);
+    url.searchParams.append("api-key", API_KEY);
+    url.searchParams.append("format", "json");
+    url.searchParams.append("limit", "500");
+
+    for (let key in params) {
+      url.searchParams.append(key, params[key]);
+    }
+
+    const response = await fetch(url);
+    const data = await response.json();
+    return data.records || [];
+  }
+
+  function populateDropdown(select, items, key) {
+    select.innerHTML = `<option value="">Select ${key}</option>`;
+    const unique = [...new Set(items.map(item => item[key]).filter(Boolean))];
+    unique.sort();
+    unique.forEach(value => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = value;
+      select.appendChild(option);
+    });
+  }
+
+  async function loadStates() {
+    const data = await fetchData();
+    populateDropdown(stateSelect, data, "state");
+    commodityCache = [...new Set(data.map(item => item.commodity).filter(Boolean))];
+  }
+
+  stateSelect.addEventListener("change", async () => {
+    districtSelect.innerHTML = "<option>District</option>";
+    marketSelect.innerHTML = "<option>Market</option>";
+    if (!stateSelect.value) return;
+
+    const data = await fetchData({ "filters[state]": stateSelect.value });
+    populateDropdown(districtSelect, data, "district");
+  });
+
+  districtSelect.addEventListener("change", async () => {
+    marketSelect.innerHTML = "<option>Market</option>";
+    if (!districtSelect.value) return;
+
+    const data = await fetchData({
+      "filters[state]": stateSelect.value,
+      "filters[district]": districtSelect.value
+    });
+    populateDropdown(marketSelect, data, "market");
+  });
+
+  /* Suggestions */
+  commodityInput.addEventListener("input", () => {
+    const value = commodityInput.value.trim().toLowerCase();
+    selectedIndex = -1;
+
+    if (value.length < 2) {
+      suggestionsBox.classList.add("hidden");
+      return;
+    }
+
+    const matches = commodityCache
+      .filter(item => item.toLowerCase().includes(value))
+      .slice(0, 6);
+
+    suggestionsBox.innerHTML = "";
+
+    matches.forEach(match => {
+      const div = document.createElement("div");
+      div.className = "px-3 py-2 hover:bg-green-50 cursor-pointer transition";
+      div.textContent = match;
+
+      div.onclick = () => {
+        commodityInput.value = match;
+        suggestionsBox.classList.add("hidden");
+      };
+
+      suggestionsBox.appendChild(div);
+    });
+
+    matches.length
+      ? suggestionsBox.classList.remove("hidden")
+      : suggestionsBox.classList.add("hidden");
+  });
+
+  /* Keyboard navigation */
+  commodityInput.addEventListener("keydown", (e) => {
+    const items = suggestionsBox.querySelectorAll("div");
+    if (!items.length) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      selectedIndex = (selectedIndex + 1) % items.length;
+      updateActive(items);
+    }
+
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+      selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+      updateActive(items);
+    }
+
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (selectedIndex >= 0) {
+        items[selectedIndex].click();
+      }
+    }
+  });
+
+  function updateActive(items) {
+    items.forEach((item, index) => {
+      if (index === selectedIndex) {
+        item.classList.add("bg-green-100");
+        item.scrollIntoView({ block: "nearest" });
+      } else {
+        item.classList.remove("bg-green-100");
+      }
+    });
+  }
+
+  document.addEventListener("click", () => {
+    suggestionsBox.classList.add("hidden");
+  });
+
+  async function loadPrices() {
+    if (!marketSelect.value) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Market Required',
+        text: 'Please select a market before searching.',
+        confirmButtonColor: '#16a34a'
+      });
+      return;
+    }
+
+    tableBodyDesktop.innerHTML = "";
+    tableBodyMobile.innerHTML = "";
+    emptyState.classList.add("hidden");
+    resultCount.textContent = "Loading...";
+
+    const params = {
+      "filters[state]": stateSelect.value,
+      "filters[district]": districtSelect.value,
+      "filters[market]": marketSelect.value,
+      limit: 100
+    };
+
+    if (commodityInput.value.trim() !== "") {
+      params["filters[commodity]"] = commodityInput.value.trim();
+    }
+
+    const data = await fetchData(params);
+
+    if (!data.length) {
+      emptyState.classList.remove("hidden");
+      resultCount.textContent = "0 Results";
+
+      Swal.fire({
+        icon: 'info',
+        title: 'No Data Found',
+        text: 'No price records available for selected filters.',
+        confirmButtonColor: '#16a34a'
+      });
+      return;
+    }
+
+    data.forEach(item => {
+      tableBodyDesktop.innerHTML += `
+        <tr>
+          <td class="px-4 py-3 font-medium">${item.commodity}</td>
+          <td class="px-4 py-3">₹${item.min_price}</td>
+          <td class="px-4 py-3">₹${item.max_price}</td>
+          <td class="px-4 py-3 text-green-600 font-semibold">₹${item.modal_price}</td>
+          <td class="px-4 py-3 text-gray-500">${item.arrival_date}</td>
+        </tr>
+      `;
+
+      tableBodyMobile.innerHTML += `
+        <div class="bg-gray-50 rounded-lg p-3 border border-gray-200">
+          <div class="font-semibold text-sm mb-2">${item.commodity}</div>
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div>Min: ₹${item.min_price}</div>
+            <div>Max: ₹${item.max_price}</div>
+            <div class="text-green-600 font-semibold">Avg: ₹${item.modal_price}</div>
+            <div class="text-gray-500">${item.arrival_date}</div>
+          </div>
+        </div>
+      `;
+    });
+
+    resultCount.textContent = `${data.length} Results`;
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Prices Loaded',
+      text: `${data.length} records fetched successfully.`,
+      timer: 1500,
+      showConfirmButton: false
+    });
+  }
+
+  loadStates();
+</script>
+
+{% endblock content %}
