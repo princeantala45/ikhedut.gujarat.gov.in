@@ -353,6 +353,7 @@
 
         <!-- PASSWORD LOGIN -->
         <form id="login-form" class="space-y-5" autocomplete="off">
+            {% csrf_token %}
             <div>
                 <label class="block text-sm font-medium text-gray-600 mb-1">Username</label>
                 <input id="username" type="text" required
@@ -387,7 +388,7 @@
                 Don’t have an account?
                 <a href="/signup" class="text-green-600 hover:text-green-700 font-medium">Sign up</a>
             </p>
-            <p class="text-sm text-center text-gray-600 mt-2">
+            <p class="text-`sm text-center text-gray-600 mt-2">
                 <a href="{% url 'password_reset' %}" class="text-green-600 hover:text-green-700 font-medium">
                     Forgot Password
                 </a>
