@@ -14,11 +14,7 @@ SECRET_KEY = os.environ.get(
 # DEBUG = os.environ.get("DEBUG", "False") == "True"
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    "ikhedut-portal.onrender.com",
-    "127.0.0.1",
-    "localhost",
-]
+ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     # "jazzmin",
