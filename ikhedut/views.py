@@ -38,7 +38,7 @@ def marketprice(request):
     return render(request,"marketprice.html",context)
     
 @login_required
-def postadvertisement(request):
+def postadvertisement(request):     
     context={
         "nav_items": Navbar.objects.all(),
         "quick_links": QuickLink.objects.all(),

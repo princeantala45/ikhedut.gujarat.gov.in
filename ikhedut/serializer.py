@@ -22,7 +22,7 @@ class Cropsaleserializers(serializers.ModelSerializer):
             raise serializers.ValidationError({
                 "crop": "Crop must not be numeric"
             })        
-        
+
         return data
 
 class Conactserializers(serializers.ModelSerializer):
@@ -162,7 +162,7 @@ class UserSerializers(serializers.ModelSerializer):
             raise serializers.ValidationError({
                 "email": "Email already exists"
             })
-        
+
         if len(data["password"]) < 8:
             raise serializers.ValidationError({
                 "password": "Password must be at least 8 characters long"
@@ -182,6 +182,7 @@ class UserSerializers(serializers.ModelSerializer):
             raise serializers.ValidationError({
                 "password": "Password must contain at least one lowercase letter"
             })
+
             
         if not any(char.isalnum() for char in data["password"]):
             raise serializers.ValidationError({
@@ -217,10 +218,8 @@ class UserSerializers(serializers.ModelSerializer):
         return user
 
 
-
 # for email 
 # otp_auth/serializers.py
-from rest_framework import serializers
 
 class EmailSerializer(serializers.Serializer):
     email = serializers.EmailField()

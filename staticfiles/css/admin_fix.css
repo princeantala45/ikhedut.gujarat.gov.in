@@ -1,0 +1,93 @@
+/* ================================
+   BASE SELECT STYLING
+================================ */
+
+select {
+    appearance: none; /* remove default arrow */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    width: 100%;
+    padding: 10px 40px 10px 12px;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    color: #111827;
+    background-color: #ffffff;
+
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+/* ================================
+   CUSTOM DROPDOWN ARROW
+================================ */
+
+select {
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%236b7280' height='20' viewBox='0 0 20 20' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M5.25 7.5l4.75 5 4.75-5'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+}
+
+/* ================================
+   HOVER EFFECT
+================================ */
+
+select:hover {
+    border-color: #ef4444;
+    background-color: #fffafa;
+}
+
+/* ================================
+   FOCUS STATE (RED THEME)
+================================ */
+
+select:focus {
+    outline: none;
+    border-color: #ef4444;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+/* ================================
+   DROPDOWN OPTIONS
+================================ */
+
+select option {
+    color: #111827;
+    background-color: #ffffff;
+    padding: 10px;
+}
+
+/* ================================
+   DISABLED STATE
+================================ */
+
+select:disabled {
+    background-color: #f3f4f6;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* ================================
+   DJANGO ADMIN ACTIONS FIX
+================================ */
+
+.actions select {
+    border-radius: 6px;
+    padding: 8px 36px 8px 10px;
+}
+
+/* ================================
+   DARK MODE SAFE
+================================ */
+
+.dark select {
+    background-color: #ffffff;
+    color: #111827;
+}

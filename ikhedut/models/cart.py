@@ -11,7 +11,7 @@ class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def is_expired(self):
-        return timezone.now() > self.created_at + timedelta(minutes=30)
+        return timezone.now() > self.created_at + timedelta(minutes=30) 
 
 class Cartitems(models.Model):
     cart = models.ForeignKey(
@@ -25,6 +25,7 @@ class Cartitems(models.Model):
         null=True,
         blank=True
     )
+
     quantity = models.PositiveIntegerField(default=20)
     added_at = models.DateTimeField(auto_now_add=True)
 

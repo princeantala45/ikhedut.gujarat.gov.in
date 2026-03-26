@@ -1,0 +1,171 @@
+/* ================================
+   GLOBAL RIGHT PANEL BACKGROUND
+================================ */
+
+body {
+    background-color: #f8fafc !important; /* soft neutral */
+}
+
+#content, .content, .main {
+    background-color: #f8fafc !important;
+    padding: 20px;
+}
+
+/* ================================
+   CARD STYLE (TABLES / FORMS)
+================================ */
+
+.module,
+.results,
+.form-row,
+.inline-group {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+    margin-bottom: 16px;
+}
+
+/* ================================
+   TABLE IMPROVEMENTS
+================================ */
+
+.results table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+}
+
+.results thead th {
+    background: #f1f5f9;
+    color: #334155;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.results td {
+    font-size: 14px;
+    color: #111827;
+}
+
+/* Row hover */
+.results tbody tr {
+    transition: all 0.2s ease;
+}
+
+.results tbody tr:hover {
+    background: #fef2f2; /* light red */
+}
+
+/* Remove harsh borders */
+.results th,
+.results td {
+    border: none !important;
+}
+
+/* Add soft separators */
+.results tbody tr:not(:last-child) {
+    border-bottom: 1px solid #f1f5f9;
+}
+
+/* ================================
+   HEADINGS & TEXT
+================================ */
+
+h1, h2, h3 {
+    color: #111827;
+    font-weight: 600;
+}
+
+.breadcrumbs {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+/* ================================
+   BUTTONS (MATCH RED THEME)
+================================ */
+
+button,
+input[type="submit"],
+.button,
+.default {
+    background: #ef4444 !important;
+    border: none !important;
+    border-radius: 8px;
+    color: #fff !important;
+    padding: 10px 16px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+button:hover,
+input[type="submit"]:hover {
+    background: #dc2626 !important;
+}
+
+/* Secondary buttons */
+.button.secondary {
+    background: #f3f4f6 !important;
+    color: #111827 !important;
+}
+
+/* ================================
+   INPUT FIELDS (GLOBAL)
+================================ */
+
+input,
+textarea,
+select {
+    border-radius: 8px !important;
+    border: 1px solid #d1d5db !important;
+    padding: 8px 10px;
+    transition: all 0.2s ease;
+}
+
+/* Focus state */
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.15) !important;
+    outline: none;
+}
+
+/* ================================
+   CHECKBOX / RADIO IMPROVE
+================================ */
+
+input[type="checkbox"],
+input[type="radio"] {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+/* ================================
+   PAGINATION / FOOTER
+================================ */
+
+.paginator {
+    margin-top: 20px;
+    color: #6b7280;
+}
+
+/* ================================
+   SIDEBAR SEPARATION (OPTIONAL)
+================================ */
+
+#nav-sidebar {
+    border-right: 1px solid #e5e7eb;
+}
+
+/* ================================
+   DARK MODE SAFETY
+================================ */
+
+.dark #content,
+.dark .module {
+    background: #ffffff !important;
+}

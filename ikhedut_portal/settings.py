@@ -21,8 +21,9 @@ ALLOWED_HOSTS = [
 ]
 
 INSTALLED_APPS = [
-    "jazzmin",
-    # 'unfold',
+    # "jazzmin",
+    'unfold',
+    # "suit",
     "rest_framework", 
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
@@ -148,53 +149,58 @@ if not DEBUG:
 
 # ------------- this is only for django admin panel UI change --------------------
 
-# UNFOLD = {
-#     "SITE_TITLE": "IKhedut Portal Admin Panel",
-#     "SITE_HEADER": "Ikhedut Portal",
-#     "SITE_SYMBOL": "Ikhedut Portal",
+UNFOLD = {
+    "SITE_TITLE": "IKhedut Portal Admin Panel",
+    "SITE_HEADER": "Ikhedut Portal",
+    "SITE_SYMBOL": "Ikhedut Portal",
 
-#     "SITE_ICON": {
-#         "light": lambda request: "/static/img/favicon.png",
-#         "dark": lambda request: "/static/img/favicon.png",
-#     },
-
-#     "SITE_LOGO": {
-#         "light": lambda request: "/static/img/header.png",
-#         "dark": lambda request: "/static/img/header.png",
-#     },
-
-#     "COLORS": {
-# "primary": {
-#     "50": "254 242 242",   # Very Light Red (Rose Mist)
-#     "100": "254 226 226",  # Light Red
-#     "200": "254 202 202",  # Soft Red
-#     "300": "252 165 165",  # Light Medium Red
-#     "400": "248 113 113",  # Medium Red
-#     "500": "239 68 68",    # Red (Main Brand Color)
-#     "600": "220 38 38",    # Dark Red
-#     "700": "185 28 28",    # Deeper Red
-#     "800": "153 27 27",    # Very Dark Red
-#     "900": "127 29 29",    # Deep Red (Almost Maroon)
-# },
-#     },
-# }
-JAZZMIN_SETTINGS = {
-    "site_title": "Admin Panel",
-    "site_header": "My Project",    
-    "site_brand": "Ikhedut Portal",
-    "welcome_sign": "Welcome to Ikhedut Portal",
-    "show_sidebar": True,
-    "navigation_expanded": False,
-    "copyright": "Ikhedut Portal",
-    "icons": {
-        "auth.user": "fas fa-user",
-        "auth.group": "fas fa-users",
+    "SITE_ICON": {
+        "light": lambda request: "/static/img/favicon.png",
+        "dark": lambda request: "/static/img/favicon.png",
     },
-    "site_logo": "img/header.png",
-    "site_icon": "img/favicon.png",
-    # for login image
-    "custom_css": "css/admin_custom.css",
+
+    "SITE_LOGO": {
+        "light": lambda request: "/static/img/header.png",
+        "dark": lambda request: "/static/img/header.png",
+    },
+
+    "COLORS": {
+        "primary": {
+            "50": "254 242 242",
+            "100": "254 226 226",
+            "200": "254 202 202",
+            "300": "252 165 165",
+            "400": "248 113 113",
+            "500": "239 68 68",
+            "600": "220 38 38",
+            "700": "185 28 28",
+            "800": "153 27 27",
+            "900": "127 29 29",
+        },
+    },
+
+    # ✅ ADD THIS (IMPORTANT)
+    "STYLES": [
+        lambda request: "/static/css/admin_fix.css",
+    ],
 }
+# JAZZMIN_SETTINGS = {
+#     "site_title": "Admin Panel",
+#     "site_header": "My Project",    
+#     "site_brand": "Ikhedut Portal",
+#     "welcome_sign": "Welcome to Ikhedut Portal",
+#     "show_sidebar": True,
+#     "navigation_expanded": False,
+#     "copyright": "Ikhedut Portal",
+#     "icons": {
+#         "auth.user": "fas fa-user",
+#         "auth.group": "fas fa-users",
+#     },
+#     "site_logo": "img/header.png",
+#     "site_icon": "img/favicon.png",
+#     # for login image
+#     "custom_css": "css/admin_custom.css",
+# }
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (

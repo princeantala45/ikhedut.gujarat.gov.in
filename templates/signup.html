@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Signup{% endblock title %}
+{% comment %} {% block title %}Signup{% endblock title %}
 
 {% block content %}
 
@@ -428,10 +428,9 @@ clearInterval(timerInterval);
 });
 </script>
 
-{% endblock content %} 
+{% endblock content %}  {% endcomment %}
 
-{% comment %} {% extends "base.html" %} {% endcomment %}
-{% comment %} {% block title %}Signup{% endblock title %}
+{% block title %}Signup{% endblock title %}
 
 {% block content %}
 
@@ -646,4 +645,4 @@ signupForm.addEventListener("submit", async function (e) {
 });
 </script>
 
-{% endblock content %} {% endcomment %}
+{% endblock content %}
