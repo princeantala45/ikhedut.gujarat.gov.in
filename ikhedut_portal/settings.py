@@ -18,7 +18,7 @@ ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     # "jazzmin",
-    # 'unfold',
+    'unfold',
     # "suit",
     "rest_framework", 
     'rest_framework_simplejwt',

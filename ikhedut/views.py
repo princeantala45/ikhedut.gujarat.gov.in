@@ -586,7 +586,6 @@ def api_my_orders(request):
 
                 
                 
-                
 # only for email login 
 
 import random
