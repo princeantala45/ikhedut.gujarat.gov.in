@@ -558,7 +558,8 @@ def checkout_api(request):
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
-def api_user_profile(request):    user = request.user
+def api_user_profile(request):
+    user = request.user
     profile = Signup.objects.filter(user=user).first()
 
     return Response({
@@ -588,6 +589,8 @@ def api_my_orders(request):
                 
 # only for email login 
 
+import random
+import datetime
 
 from django.core.mail import send_mail
 from django.utils.html import strip_tags
