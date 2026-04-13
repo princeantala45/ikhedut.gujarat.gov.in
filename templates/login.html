@@ -1,0 +1,490 @@
+{% extends "base.html" %}
+{% comment %} {% block title %}User Login{% endblock title %}
+
+{% block content %}
+<div class="flex items-start sm:items-center justify-center bg-gray-100 px-4 pt-4 pb-4 sm:py-0">
+    <div class="w-full max-w-md bg-white rounded-xl shadow-lg p-5 sm:p-8" style="margin-top: 50px;">
+        <h2 class="text-2xl font-semibold text-green-700 text-center mb-6">
+            Welcome to ikhedut-Portal
+        </h2>
+
+        <div class="flex mb-8 border-b border-gray-100">
+            <button id="tab-pass" onclick="switchTab('pass')"
+                class="w-1/2 pb-2 text-sm font-semibold text-green-700 border-b-2 border-green-700 transition-all">Password</button>
+            <button id="tab-otp" onclick="switchTab('otp')"
+                class="w-1/2 pb-2 text-sm font-semibold text-gray-400 border-b-2 border-transparent transition-all">Email
+                OTP</button>
+        </div>
+
+        <!-- PASSWORD LOGIN -->
+        <form id="login-form" class="space-y-5" autocomplete="off">
+            <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">Username</label>
+                <input id="username" type="text" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">Password</label>
+                <input id="password" type="password" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
+            </div>
+            <div class="pt-4 flex justify-center lg:justify-start">
+                <button type="submit" class="cssbuttons-io-button">
+                    Login
+                    <div class="icon">
+                        <svg height="24" width="24" viewBox="0 0 24 24">
+                            <path d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
+                                fill="currentColor"></path>
+                        </svg>
+                    </div>
+                </button>
+            </div>
+        </form>
+
+        <!-- OTP LOGIN -->
+        <form id="otp-form" class="space-y-5 hidden" autocomplete="off">
+            <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">Email Address</label>
+                <div class="flex gap-2">
+                    <input id="email_otp" type="email"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    <button type="button" onclick="requestOTP()"
+                        class="bg-green-600 text-white px-3 py-2 rounded-lg text-xs hover:bg-green-700 transition-colors">
+                        Send OTP
+                    </button>
+                </div>
+            </div>
+
+            <div id="otp-entry-section" class="hidden">
+                <label class="block text-sm font-medium text-gray-600 mb-3 text-center">
+                    Verification Code
+                </label>
+
+                <div class="flex justify-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap">
+                    <input type="text" maxlength="1" class="otp-box" />
+                    <input type="text" maxlength="1" class="otp-box" />
+                    <input type="text" maxlength="1" class="otp-box" />
+                    <input type="text" maxlength="1" class="otp-box" />
+                    <input type="text" maxlength="1" class="otp-box" />
+                    <input type="text" maxlength="1" class="otp-box" />
+                </div>
+
+                <!-- Hidden real OTP field -->
+                <input type="hidden" id="otp_code" />
+
+                <p class="text-xs text-right mt-3">
+<button type="button" onclick="requestOTP()" class="text-green-600 hover:underline">
+    Resend OTP?
+</button>
+                </p>
+            </div>
+
+            <div class="pt-4 flex justify-center lg:justify-start">
+                <button type="submit" id="verify-btn" class="cssbuttons-io-button">
+                    Verify OTP
+                    <div class="icon">
+                        <svg height="24" width="24" viewBox="0 0 24 24">
+                            <path d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
+                                fill="currentColor"></path>
+                        </svg>
+                    </div>
+                </button>
+            </div>
+        </form>
+
+        <div class="mt-8 border-t border-gray-50 pt-4">
+            <p class="text-sm text-center text-gray-600">
+                Don’t have an account? <a href="/signup" class="text-green-600 hover:text-green-700 font-medium">Sign
+                    up</a>
+            </p>
+            <p class="text-sm text-center text-gray-600 mt-2">
+                <a href="{% url 'password_reset' %}" class="text-green-600 hover:text-green-700 font-medium">Forgot
+                    Password</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+.otp-box {
+    width: 40px;
+    height: 48px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+@media (min-width: 640px) {
+    .otp-box {
+        width: 45px;
+        height: 50px;
+        font-size: 20px;
+    }
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function switchTab(type) {
+        const pForm = document.getElementById('login-form');
+        const oForm = document.getElementById('otp-form');
+        const pTab = document.getElementById('tab-pass');
+        const oTab = document.getElementById('tab-otp');
+
+        if (type === 'otp') {
+            pForm.classList.add('hidden');
+            oForm.classList.remove('hidden');
+            oTab.classList.replace('text-gray-400', 'text-green-700');
+            oTab.classList.add('border-green-700');
+            pTab.classList.replace('text-green-700', 'text-gray-400');
+            pTab.classList.remove('border-green-700');
+        } else {
+            oForm.classList.add('hidden');
+            pForm.classList.remove('hidden');
+        }
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name + "=")) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrfToken = getCookie("csrftoken");
+
+    /* OTP BOX UI LOGIC */
+    const otpInputs = document.querySelectorAll(".otp-box");
+    const hiddenOtp = document.getElementById("otp_code");
+
+    otpInputs.forEach((input, index) => {
+        input.addEventListener("input", (e) => {
+            e.target.value = e.target.value.replace(/[^0-9]/g, "");
+            if (e.target.value && index < otpInputs.length - 1) {
+                otpInputs[index + 1].focus();
+            }
+            updateHiddenOTP();
+        });
+
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Backspace" && !input.value && index > 0) {
+                otpInputs[index - 1].focus();
+            }
+        });
+    });
+
+    function updateHiddenOTP() {
+        let otpValue = "";
+        otpInputs.forEach(input => otpValue += input.value);
+        hiddenOtp.value = otpValue;
+    }
+
+    /* AUTH RESPONSE */
+    function handleAuthResponse(data) {
+        if (data.access) {
+            localStorage.setItem("access", data.access);
+            localStorage.setItem("refresh", data.refresh);
+            localStorage.setItem("access_expires", data.access_expires);
+            Swal.fire("Welcome!", "Login successful.", "success")
+                .then(() => window.location.href = "/");
+        } else {
+            Swal.fire("Login Failed", data.error || "Invalid credentials.", "error");
+        }
+    }
+
+    /* PASSWORD LOGIN */
+    document.getElementById("login-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        fetch("/login_api/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "X-CSRFToken": csrfToken },
+            body: JSON.stringify({
+                username: document.getElementById("username").value,
+                password: document.getElementById("password").value
+            })
+        }).then(res => res.json()).then(handleAuthResponse);
+    });
+
+    /* REQUEST OTP WITH LOADER */
+    function requestOTP() {
+        const email = document.getElementById("email_otp").value;
+        if (!email) return Swal.fire("Required", "Please enter your email", "warning");
+
+        Swal.fire({
+            title: "Sending OTP...",
+            text: "Please wait",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => Swal.showLoading()
+        });
+
+        fetch("{% url 'request-otp' %}", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "X-CSRFToken": csrfToken },
+            body: JSON.stringify({ email: email })
+        })
+            .then(res => res.json())
+            .then(data => {
+    Swal.close();
+
+    if (data.error) {
+        // If backend sends: { error: "Email not registered" }
+        Swal.fire("Not Registered", data.error, "warning");
+        return;
+    }
+
+    if (data.message || data.success) {
+        document.getElementById("otp-entry-section").classList.remove("hidden");
+        document.getElementById("verify-btn").disabled = false;
+        document.getElementById("verify-btn").classList.remove("opacity-50", "cursor-not-allowed");
+
+        Swal.fire("OTP Sent", "Verification code sent to email.", "success");
+    } else {
+        Swal.fire("Error", "Failed to send OTP", "error");
+    }
+});
+    }
+
+    /* VERIFY OTP WITH LOADER */
+    document.getElementById("otp-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const otp = document.getElementById("otp_code").value;
+
+    if (otp.length !== 6) {
+        Swal.fire("Invalid OTP", "Please enter the 6 digit code.", "warning");
+        return;
+    }
+        e.preventDefault();
+
+        Swal.fire({
+            title: "Verifying OTP...",
+            text: "Please wait",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => Swal.showLoading()
+        });
+
+        fetch("{% url 'verify-otp' %}", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "X-CSRFToken": csrfToken },
+            body: JSON.stringify({
+                email: document.getElementById("email_otp").value,
+                otp: document.getElementById("otp_code").value
+            })
+        })
+           .then(res => res.json())
+.then(async data => {
+    Swal.close();
+
+    if (!data.message) {
+        Swal.fire("Error", data.error || "OTP verification failed", "error");
+        return;
+    }
+
+    // OTP verified → now login
+    const loginResponse = await fetch("/otp/login/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken
+        },
+        body: JSON.stringify({
+            email: document.getElementById("email_otp").value
+        })
+    });
+
+    const loginData = await loginResponse.json();
+    handleAuthResponse(loginData);
+});
+    });
+
+    /* SESSION AUTO LOGOUT */
+    function setupAutoLogout() {
+        const exp = localStorage.getItem("access_expires");
+        if (!exp) return;
+        const timeLeft = (parseInt(exp) * 1000) - Date.now();
+        if (timeLeft <= 0) { forceLogout(); return; }
+        setTimeout(forceLogout, timeLeft);
+    }
+    function forceLogout() {
+        localStorage.clear();
+        window.location.href = "/login/";
+    }
+    setupAutoLogout();
+</script>
+
+{% endblock content %}
+ {% endcomment %}
+
+{% block title %}User Login{% endblock title %}
+
+{% block content %}
+<div class="flex items-start sm:items-center justify-center bg-gray-100 px-4 pt-4 pb-4 sm:py-0">
+    <div class="w-full max-w-md bg-white rounded-xl shadow-lg p-5 sm:p-8" style="margin-top: 50px;">
+        <h2 class="text-2xl font-semibold text-green-700 text-center mb-6">
+            Welcome to ikhedut-Portal
+        </h2>
+
+        <div class="flex mb-8 border-b border-gray-100">
+            <button id="tab-pass" onclick="switchTab('pass')"
+                class="w-1/2 pb-2 text-sm font-semibold text-green-700 border-b-2 border-green-700 transition-all">
+                Password
+            </button>
+            <button id="tab-otp" onclick="switchTab('otp')"
+                class="w-1/2 pb-2 text-sm font-semibold text-gray-400 border-b-2 border-transparent transition-all">
+                Email OTP
+            </button>
+        </div>
+
+        <!-- PASSWORD LOGIN -->
+        <form id="login-form" class="space-y-5" autocomplete="off">
+            {% csrf_token %}
+            <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">Username</label>
+                <input id="username" type="text" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">Password</label>
+                <input id="password" type="password" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
+            </div>
+            <div class="pt-4 flex justify-center lg:justify-start">
+        <button type="submit" class="cssbuttons-io-button">
+          Login
+          <div class="icon">
+            <svg height="24" width="24" viewBox="0 0 24 24">
+              <path d="M0 0h24v24H0z" fill="none"></path>
+              <path
+                d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
+                fill="currentColor">
+              </path>
+            </svg>
+          </div>
+        </button>
+      </div>
+        </form>
+
+        <!-- OTP FORM (kept but disabled by popup) -->
+        <form id="otp-form" class="hidden"></form>
+
+        <div class="mt-8 border-t border-gray-50 pt-4">
+            <p class="text-sm text-center text-gray-600">
+                Don’t have an account?
+                <a href="/signup" class="text-green-600 hover:text-green-700 font-medium">Sign up</a>
+            </p>
+            <p class="text-`sm text-center text-gray-600 mt-2">
+                <a href="{% url 'password_reset' %}" class="text-green-600 hover:text-green-700 font-medium">
+                    Forgot Password
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    /* TAB SWITCH */
+    function switchTab(type) {
+        if (type === 'otp') {
+            Swal.fire(
+                "Coming Soon",
+                "This service will be available soon.",
+                "info"
+            );
+            return;
+        }
+    }
+
+    /* CSRF */
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name + "=")) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrfToken = getCookie("csrftoken");
+
+    /* HANDLE LOGIN RESPONSE */
+    function handleAuthResponse(data) {
+        if (data.access) {
+            localStorage.setItem("access", data.access);
+            localStorage.setItem("refresh", data.refresh);
+            localStorage.setItem("access_expires", data.access_expires);
+
+            Swal.fire("Welcome!", "Login successful.", "success")
+                .then(() => window.location.href = "/");
+        } else {
+            Swal.fire("Login Failed", data.error || "Invalid credentials.", "error");
+        }
+    }
+
+    /* PASSWORD LOGIN */
+    document.getElementById("login-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        fetch("/login_api/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrfToken
+            },
+            body: JSON.stringify({
+                username: document.getElementById("username").value,
+                password: document.getElementById("password").value
+            })
+        })
+        .then(res => res.json())
+        .then(handleAuthResponse)
+        .catch(() => {
+            Swal.fire("Error", "Something went wrong.", "error");
+        });
+    });
+
+    /* AUTO LOGOUT */
+    function setupAutoLogout() {
+        const exp = localStorage.getItem("access_expires");
+        if (!exp) return;
+
+        const timeLeft = (parseInt(exp) * 1000) - Date.now();
+        if (timeLeft <= 0) {
+            forceLogout();
+            return;
+        }
+
+        setTimeout(forceLogout, timeLeft);
+    }
+
+    function forceLogout() {
+        localStorage.clear();
+        window.location.href = "/login/";
+    }
+
+    setupAutoLogout();
+</script>
+
+{% endblock content %}
